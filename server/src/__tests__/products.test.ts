@@ -37,4 +37,5 @@ describe('상품', () => {
 
     await request(app).delete(`/products/${createRes.body.data.productId}`).expect(200);
   });
+
 });

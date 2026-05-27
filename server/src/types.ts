@@ -1,4 +1,4 @@
-export type Product = {
+export interface Product {
   isDeleted: boolean;
   productId: string;
   name: string;
@@ -6,3 +6,8 @@ export type Product = {
   image: string;
   stock: number;
 };
+
+export interface CartItem extends Product{
+  cartItemId : string;
+  quantity: number;
+}
