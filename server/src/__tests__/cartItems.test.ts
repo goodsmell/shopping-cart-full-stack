@@ -70,7 +70,6 @@ describe('장바구니', () => {
 
   it('장바구니에 담긴 상품을 삭제할 수 있다.', async () => {
     products.set('1', {
-      isDeleted: false,
       productId: '1',
       name: '상품이름A',
       price: 35000,

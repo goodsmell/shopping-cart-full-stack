@@ -19,9 +19,8 @@ class ProductsRepository {
     return this.store.has(id) ? this.generateUniqueId() : id;
   }
 
-  async insert(product: Omit<Product, 'productId' | 'isDeleted'>) {
+  async insert(product: Omit<Product, 'productId'>) {
     const productObj = {
-      isDeleted: false,
       productId: this.generateUniqueId(),
       ...product,
     };
@@ -37,12 +36,9 @@ class ProductsRepository {
 
     if (!product) throw new NotFoundError('삭제할 상품');
 
-    this.store.set(productId, {
-      ...product,
-      isDeleted: true,
-    });
+    this.store.delete(productId);
 
-    return this.store.get(productId);
+    return product;
   }
 }
 

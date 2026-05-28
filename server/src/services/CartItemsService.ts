@@ -24,11 +24,10 @@ class CartItemsService {
   }) {
     const product = await this.productsRepository.getById(cartItem.productId);
     if (!product) throw new NotFoundError('장바구니에 담을 상품');
-    const cartItemObj = {
-      ...product,
+    return await this.cartRepository.insertByUser({
+      productId: cartItem.productId,
       quantity: cartItem.quantity,
-    };
-    return await this.cartRepository.insertByUser(cartItemObj);
+    });
   }
 
   async patchCartItem(

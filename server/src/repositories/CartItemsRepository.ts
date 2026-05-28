@@ -22,9 +22,8 @@ class CartItemsRepository {
     return this.store.has(id) ? this.generateUniqueId() : id;
   }
 
-  async insertByUser(cartItem: Omit<CartItem, 'cartItemId' | 'isDeleted'>) {
+  async insertByUser(cartItem: Omit<CartItem, 'cartItemId'>) {
     const cartItemObj = {
-      isDeleted: false,
       cartItemId: this.generateUniqueId(),
       ...cartItem,
     };

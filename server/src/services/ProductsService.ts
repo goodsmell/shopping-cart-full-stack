@@ -10,12 +10,10 @@ class ProductsService {
   }
 
   async getProducts() {
-    const products = await this.repository.getAll();
-
-    return products.filter((product) => product.isDeleted === false);
+    return await this.repository.getAll();
   }
 
-  async insertProduct(product: Omit<Product, 'productId' | 'isDeleted'>) {
+  async insertProduct(product: Omit<Product, 'productId'>) {
     // TODO: 도메인 검증
     return await this.repository.insert(product);
   }

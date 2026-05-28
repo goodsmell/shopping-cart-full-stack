@@ -1,5 +1,4 @@
 export interface Product {
-  isDeleted: boolean;
   productId: string;
   name: string;
   price: number;
