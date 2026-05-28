@@ -85,4 +85,28 @@ describe('장바구니', () => {
 
     await request(app).delete('/cart/1').expect(200);
   });
+
+  it('장바구니에 상품을 중복 추가할 수 없다.', async () => {
+    products.set('1', {
+      productId: '1',
+      name: '상품이름A',
+      price: 35000,
+      image: '이미지',
+      stock: 1,
+    });
+
+    cartItems.set('1', {
+      cartItemId: '1',
+      productId: '1',
+      quantity: 1,
+    });
+
+    await request(app)
+      .post('/cart')
+      .send({
+        productId: '1',
+        quantity: 1,
+      })
+      .expect(400);
+  });
 });

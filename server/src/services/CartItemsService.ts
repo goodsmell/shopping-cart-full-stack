@@ -1,7 +1,7 @@
 import ProductsRepository from '../repositories/ProductsRepository';
 import CartItemsRepository from '../repositories/CartItemsRepository';
 import { CartItem } from '../types';
-import { NotFoundError } from '../errors';
+import { BadRequestError, NotFoundError } from '../errors';
 
 class CartItemsService {
   productsRepository;
@@ -23,7 +23,14 @@ class CartItemsService {
     quantity: CartItem['quantity'];
   }) {
     const product = await this.productsRepository.getById(cartItem.productId);
-    if (!product) throw new NotFoundError('장바구니에 담을 상품');
+    if (!product) throw new NotFoundError({"productId": '장바구니에 담을 상품을 찾을 수 없습니다.'});
+
+    // cartRepository에 해당 productId가 있으면 400에러
+    const cartItems = await this.cartRepository.getAll();
+    if (cartItems.find((item) => item.productId === product.productId)) {
+      throw new BadRequestError({ productId: '이미 장바구니에 담긴 상품입니다.' });
+    }
+
     return await this.cartRepository.insertByUser({
       productId: cartItem.productId,
       quantity: cartItem.quantity,
@@ -37,7 +44,7 @@ class CartItemsService {
     // 카트 아이템을 가져온다, 없으면 에러를 낸다
     // 카드 아이템 수량을 수정한다
     const cartItem = await this.cartRepository.getById(cartItemId);
-    if (!cartItem) throw new NotFoundError('장바구니 항목');
+    if (!cartItem) throw new NotFoundError({"cartItemId": '장바구니 항목을 찾을 수 없습니다.'});
     const newCartItem = {
       ...cartItem,
       quantity: cartItemPartial.quantity,
@@ -48,7 +55,7 @@ class CartItemsService {
   async deleteCartItem(cartItemId: CartItem['cartItemId']) {
     const cartItem = await this.cartRepository.getById(cartItemId);
     // TODO: 상품 삭제시 해당 상품을 담아놓은 장바구니에서 제거해줘야함
-    if (!cartItem) throw new NotFoundError('삭제할 장바구니 상품');
+    if (!cartItem) throw new NotFoundError({"cartItemId": '삭제할 장바구니 상품을 찾을 수 없습니다.'});
     return await this.cartRepository.deleteById(cartItemId);
   }
 }

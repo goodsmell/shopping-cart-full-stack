@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
-import { NotFoundError } from '../errors';
+import { BadRequestError, NotFoundError } from '../errors';
 
 const errorHandler = (err: unknown, _req: Request, res: Response, _next: NextFunction) => {
   if (err instanceof ZodError) {
@@ -10,7 +10,12 @@ const errorHandler = (err: unknown, _req: Request, res: Response, _next: NextFun
   }
 
   if (err instanceof NotFoundError) {
-    res.status(404).json({ status: 'fail', data: { [err.resource]: err.message } });
+    res.status(404).json({ status: 'fail', data: err.data });
+    return;
+  }
+
+  if (err instanceof BadRequestError) {
+    res.status(400).json({ status: 'fail', data: err.data });
     return;
   }
 

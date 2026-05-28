@@ -34,7 +34,7 @@ class ProductsRepository {
   async deleteById(productId: Product['productId']) {
     const product = this.store.get(productId);
 
-    if (!product) throw new NotFoundError('삭제할 상품');
+    if (!product) throw new NotFoundError({"productId": '삭제할 상품을 찾을 수 없습니다.'});
 
     this.store.delete(productId);
 

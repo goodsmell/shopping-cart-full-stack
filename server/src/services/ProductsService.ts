@@ -23,7 +23,7 @@ class ProductsService {
 
   async deleteProduct(productId: Product['productId']) {
     const product = await this.productsRepository.getById(productId);
-    if (!product) throw new NotFoundError('삭제할 상품');
+    if (!product) throw new NotFoundError({ productId: '삭제할 상품을 찾을 수 없습니다.' });
 
     const cartItems = await this.cartItemsRepository.getAll();
 
