@@ -1,4 +1,3 @@
-import { NotFoundError } from '../errors';
 import { Product } from './../types';
 
 export const products = new Map<string, Product>();
@@ -34,7 +33,7 @@ class ProductsRepository {
   async deleteById(productId: Product['productId']) {
     const product = this.store.get(productId);
 
-    if (!product) throw new NotFoundError({"productId": '삭제할 상품을 찾을 수 없습니다.'});
+    if (!product) return null;
 
     this.store.delete(productId);
 

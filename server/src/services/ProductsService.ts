@@ -34,7 +34,12 @@ class ProductsService {
       }
     });
 
-    return await this.productsRepository.deleteById(productId);
+    const deleted = await this.productsRepository.deleteById(productId);
+
+    if (!deleted)
+      throw new NotFoundError({ productId: '삭제할 상품을 찾을 수 없습니다.' });
+
+    return deleted;
   }
 }
 

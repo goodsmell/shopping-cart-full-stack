@@ -37,8 +37,13 @@ class CartItemsRepository {
   }
 
   async deleteById(cartItemId: CartItem['cartItemId']) {
+    const cartItem = this.store.get(cartItemId);
+
+    if (!cartItem) return null;
+
     this.store.delete(cartItemId);
-    return {cartItemId: this.store.get(cartItemId)?.cartItemId};
+
+    return { cartItemId: cartItem.cartItemId };
   }
 }
 
