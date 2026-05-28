@@ -285,16 +285,6 @@ Content-Type: application/json
 ```
 
 ```json
-// 400 Bad Request - 수량이 재고 초과
-{
-  "status": "fail",
-  "data": {
-    "quantity": "수량이 재고를 초과할 수 없습니다."
-  }
-}
-```
-
-```json
 // 404 Not Found - 존재하지 않는 상품
 {
   "status": "fail",
@@ -313,7 +303,6 @@ Content-Type: application/json
 | `productId` | 누락                       | `상품 ID는 필수입니다.`                    |
 | `quantity`  | 누락                       | `수량은 필수입니다.`                       |
 | `quantity`  | 1 미만, 99 초과, 정수 아님 | `수량은 1 이상 99 이하의 정수여야 합니다.` |
-| `quantity`  | 재고 초과                  | `수량이 재고를 초과할 수 없습니다.`        |
 
 **비즈니스 규칙**
 
@@ -370,16 +359,6 @@ Content-Type: application/json
 ```
 
 ```json
-// 400 Bad Request - 수량이 재고 초과
-{
-  "status": "fail",
-  "data": {
-    "quantity": "수량이 재고를 초과할 수 없습니다."
-  }
-}
-```
-
-```json
 // 404 Not Found - 존재하지 않는 장바구니 항목
 {
   "status": "fail",
@@ -393,7 +372,6 @@ Content-Type: application/json
 | ---------- | -------------------------- | ------------------------------------------ |
 | `quantity` | 누락                       | `수량은 필수입니다.`                       |
 | `quantity` | 1 미만, 99 초과, 정수 아님 | `수량은 1 이상 99 이하의 정수여야 합니다.` |
-| `quantity` | 재고 초과                  | `수량이 재고를 초과할 수 없습니다.`        |
 
 ---
 
