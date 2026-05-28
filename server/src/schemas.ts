@@ -15,3 +15,11 @@ export const InsertCartItemBodySchema = z.object({
   productId: z.string(),
   quantity: z.number(),
 });
+
+export const UpdateCartItemRequestParamsSchema = z.object({
+  cartItemId: z.string(),
+});
+
+export const UpdateCartItemRequestBodySchema = z.object({
+  quantity: z.number(),
+});

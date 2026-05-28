@@ -1,7 +1,12 @@
 import { Request, Response } from 'express';
 import CartItemsService from '../services/CartItemsService';
-import { InsertCartItemBodySchema } from '../schemas';
+import {
+  InsertCartItemBodySchema,
+  UpdateCartItemRequestParamsSchema,
+  UpdateCartItemRequestBodySchema,
+} from '../schemas';
 import { ZodError } from 'zod';
+import { NotFoundError } from '../errors';
 
 class CartItemContorller {
   service;
@@ -47,6 +52,43 @@ class CartItemContorller {
       res.status(500).json({
         status: 'error',
         data: '상품을 추가하는 중 에러가 발생했습니다.',
+      });
+    }
+  };
+
+  patchCartItems = async (req: Request, res: Response) => {
+    try {
+      // 카트 아이템 아이디, 카드 아이템(수량) 받기
+      const parsedParams = UpdateCartItemRequestParamsSchema.parse(req.params);
+
+      const parsedBody = UpdateCartItemRequestBodySchema.parse(req.body);
+
+      const cartItems = await this.service.patchCartItem(parsedParams.cartItemId, parsedBody);
+
+      res.status(200).json({
+        status: 'success',
+        data: cartItems,
+      });
+    } catch (error: unknown) {
+      if (error instanceof ZodError) {
+        const { fieldErrors } = error.flatten();
+
+        res.status(400).json({
+          status: 'fail',
+          data: fieldErrors,
+        });
+      }
+
+      if (error instanceof NotFoundError) {
+        res.status(404).json({
+          status: 'fail',
+          data: { [error.resource]: error.message },
+        });
+      }
+
+      res.status(500).json({
+        status: 'error',
+        data: '장바구니 목록을 가져오는 중 에러가 발생했습니다.',
       });
     }
   };

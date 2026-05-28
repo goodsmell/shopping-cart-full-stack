@@ -23,12 +23,27 @@ class CartItemsService {
     quantity: CartItem['quantity'];
   }) {
     const product = await this.productsRepository.getById(cartItem.productId);
-    if(!product) throw new NotFoundError("장바구니에 담을 상품");
+    if (!product) throw new NotFoundError('장바구니에 담을 상품');
     const cartItemObj = {
       ...product,
-      quantity: cartItem.quantity
-    }
+      quantity: cartItem.quantity,
+    };
     return await this.cartRepository.insertByUser(cartItemObj);
+  }
+
+  async patchCartItem(
+    cartItemId: CartItem['cartItemId'],
+    cartItemPartial: { quantity: CartItem['quantity'] },
+  ) {
+    // 카트 아이템을 가져온다, 없으면 에러를 낸다
+    // 카드 아이템 수량을 수정한다
+    const cartItem = await this.cartRepository.getById(cartItemId);
+    if (!cartItem) throw new NotFoundError('장바구니 항목');
+    const newCartItem = {
+      ...cartItem,
+      quantity: cartItemPartial.quantity,
+    };
+    return await this.cartRepository.updateById(cartItemId, newCartItem);
   }
 }
 

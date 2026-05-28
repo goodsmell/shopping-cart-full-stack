@@ -2,7 +2,6 @@ import request from 'supertest';
 import app from '../app';
 
 describe('장바구니', () => {
-    
   it('장바구니 목록을 조회할 수 있다.', async () => {
     await request(app).get('/cart').expect(200);
   });
@@ -22,5 +21,26 @@ describe('장바구니', () => {
         quantity: 1,
       })
       .expect(201);
+  });
+
+  it('장바구니에 담긴 상품의 수량을 변경할 수 있다..', async () => {
+    const createProduct = await request(app).post('/products').send({
+      name: '상품이름A',
+      price: 35000,
+      image: '이미지',
+      stock: 1,
+    });
+
+    const createCartItem = await request(app).post('/cart').send({
+      productId: createProduct.body.data.productId,
+      quantity: 1,
+    });
+
+    await request(app)
+      .patch(`/cart/${createCartItem.body.data.cartItemId}`)
+      .send({
+        quantity: 2,
+      })
+      .expect(200);
   });
 });

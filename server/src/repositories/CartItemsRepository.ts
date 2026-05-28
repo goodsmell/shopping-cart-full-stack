@@ -13,6 +13,10 @@ class CartItemsRepository {
     return Array.from(this.store.entries()).map((entry) => entry[1]);
   }
 
+  async getById(cartItemId: CartItem['cartItemId']) {
+    return this.store.get(cartItemId);
+  }
+
   async insertByUser(cartItem: Omit<CartItem, 'cartItemId' | 'isDeleted'>) {
     const cartItemObj = {
       isDeleted: false,
@@ -21,6 +25,11 @@ class CartItemsRepository {
     };
     this.store.set(cartItemObj.cartItemId, cartItemObj);
     return cartItemObj;
+  }
+
+  async updateById(cartItemId: CartItem['cartItemId'], cartItem: CartItem) {
+    this.store.set(cartItemId, cartItem);
+    return this.store.get(cartItemId);
   }
 }
 
