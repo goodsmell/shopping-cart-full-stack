@@ -16,7 +16,7 @@ const PrimaryButton = ({ text, onClick, isDisabled = false }: Props) => {
         width: 100%;
         background-color: ${isDisabled ? `var(--color-button-disabled)` : `var(--color-main)`};
         border: none;
-        color: var(--color-button-text);
+        color: var(--color-white);
         font: var(--text-subheading);
         cursor: ${isDisabled ? `not-allowed` : `pointer`};
         ${!isDisabled && `&:hover { background-color: #555555; }`}
