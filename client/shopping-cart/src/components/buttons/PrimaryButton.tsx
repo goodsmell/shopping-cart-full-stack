@@ -12,6 +12,9 @@ const PrimaryButton = ({ text, onClick, isDisabled = false }: Props) => {
       onClick={onClick}
       disabled={isDisabled}
       css={css`
+        display: flex;
+        align-items: center;
+        justify-content: center;
         height: 64px;
         width: 100%;
         background-color: ${isDisabled ? `var(--color-button-disabled)` : `var(--color-main)`};
