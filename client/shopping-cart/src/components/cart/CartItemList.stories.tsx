@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { CartItemWithProduct } from '../types';
+import type { CartItemWithProduct } from '../../types';
 import CartItemList from './CartItemList';
 
 const cartItems: CartItemWithProduct[] = [

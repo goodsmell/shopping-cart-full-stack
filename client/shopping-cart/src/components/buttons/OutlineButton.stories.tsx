@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import plusIcon from '../../assets/plus_icon.svg';
 import minusIcon from '../../assets/minus_icon.svg';
-import { CheckIcon } from '../icons';
+import { CheckIcon } from '../icons/CheckIcon';
 import OutlineButton from './OutlineButton';
 
 const meta: Meta<typeof OutlineButton> = {

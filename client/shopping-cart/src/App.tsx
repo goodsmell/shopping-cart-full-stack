@@ -1,5 +1,5 @@
 import { Route, Routes } from 'react-router';
-import AppLayout from './components/AppLayout';
+import AppLayout from './components/layout/AppLayout';
 import OrderConfirm from './pages/OrderConfirm';
 import ShoppingCart from './pages/ShoppingCart';
 

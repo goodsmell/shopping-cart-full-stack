@@ -1,8 +1,8 @@
 import { css } from '@emotion/react';
 import CartItem from './CartItem';
-import type { CartItemWithProduct } from '../types';
-import OutlineButton from './buttons/OutlineButton';
-import { CheckIcon } from './icons';
+import type { CartItemWithProduct } from '../../types';
+import OutlineButton from '../buttons/OutlineButton';
+import { CheckIcon } from '../icons/CheckIcon';
 
 type Props = { cartItems: CartItemWithProduct[] };
 

@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import type { CartItemWithProduct } from '../types';
+import type { CartItemWithProduct } from '../../types';
 import QuantityControl from './QuantityControl';
 
 type Props = Pick<CartItemWithProduct, 'image' | 'name' | 'price' | 'quantity'>;
