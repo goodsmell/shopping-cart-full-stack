@@ -6,7 +6,7 @@ import App from './App.tsx';
 
 async function enableMocking() {
   if (import.meta.env.DEV) {
-    const { worker } = await import('./mocks/browser');
+    const { worker } = await import('./mocks/browser.ts');
     return worker.start({ onUnhandledRequest: 'bypass' });
   }
 }
