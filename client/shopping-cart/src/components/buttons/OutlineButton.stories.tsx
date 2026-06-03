@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { CheckIcon, MinusIcon, PlusIcon } from '../icons';
+import plusIcon from '../../assets/plus_icon.svg';
+import minusIcon from '../../assets/minus_icon.svg';
+import { CheckIcon } from '../icons';
 import OutlineButton from './OutlineButton';
 
 const meta: Meta<typeof OutlineButton> = {
@@ -15,13 +17,13 @@ type Story = StoryObj<typeof OutlineButton>;
 
 export const WithPlusIcon: Story = {
   args: {
-    children: <PlusIcon />,
+    children: <img src={plusIcon} />,
   },
 };
 
 export const WithMinusIcon: Story = {
   args: {
-    children: <MinusIcon />,
+    children: <img src={minusIcon} />,
   },
 };
 
