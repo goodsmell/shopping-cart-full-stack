@@ -17,6 +17,7 @@ const OutlineButton = ({ onClick, children, radius = 'md' }: Props) => {
         justify-content: center;
         background: none;
         cursor: pointer;
+        padding: 0 6px;
 
         &:hover {
           background: #f0f0f0;
