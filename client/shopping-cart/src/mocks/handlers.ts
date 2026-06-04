@@ -17,12 +17,33 @@ type StoredCartItem = {
 };
 
 const mockProducts: Product[] = [
-  { productId: '1', name: '상품 A', price: 10000, image: 'https://via.placeholder.com/150', stock: 10 },
-  { productId: '2', name: '상품 B', price: 20000, image: 'https://via.placeholder.com/150', stock: 5 },
+  {
+    productId: '1',
+    name: '데일리 라운드 티셔츠',
+    price: 10000,
+    image: 'https://picsum.photos/seed/cart-item-1/150',
+    stock: 10,
+  },
+  {
+    productId: '2',
+    name: '와이드 데님 팬츠',
+    price: 20000,
+    image: 'https://picsum.photos/seed/cart-item-2/150',
+    stock: 5,
+  },
+  {
+    productId: '3',
+    name: '아주 긴 이름의 프리미엄 코튼 오버핏 셔츠',
+    price: 32000,
+    image: 'https://picsum.photos/seed/cart-item-3/150',
+    stock: 8,
+  },
 ];
 
 const mockCartItems: StoredCartItem[] = [
   { cartItemId: '1', productId: '1', quantity: 2 },
+  { cartItemId: '2', productId: '2', quantity: 1 },
+  { cartItemId: '3', productId: '3', quantity: 4 },
 ];
 
 const toCartItemResponse = (cartItem: StoredCartItem) => {
@@ -41,7 +62,12 @@ export const handlers = [
   }),
 
   http.post(`${BASE_URL}/products`, async ({ request }) => {
-    const body = await request.json() as { name: string; price: number; image: string; stock: number };
+    const body = (await request.json()) as {
+      name: string;
+      price: number;
+      image: string;
+      stock: number;
+    };
     const newProduct = { productId: String(mockProducts.length + 1), ...body };
     mockProducts.push(newProduct);
     return HttpResponse.json({ status: 'success', data: newProduct }, { status: 201 });
@@ -57,15 +83,18 @@ export const handlers = [
   }),
 
   http.post(`${BASE_URL}/cart`, async ({ request }) => {
-    const body = await request.json() as { productId: string; quantity: number };
+    const body = (await request.json()) as { productId: string; quantity: number };
     const newItem = { cartItemId: String(mockCartItems.length + 1), ...body };
     mockCartItems.push(newItem);
-    return HttpResponse.json({ status: 'success', data: toCartItemResponse(newItem) }, { status: 201 });
+    return HttpResponse.json(
+      { status: 'success', data: toCartItemResponse(newItem) },
+      { status: 201 },
+    );
   }),
 
   http.patch(`${BASE_URL}/cart/:cartItemId`, async ({ params, request }) => {
     const { cartItemId } = params;
-    const body = await request.json() as { quantity: number };
+    const body = (await request.json()) as { quantity: number };
     const item = mockCartItems.find((i) => i.cartItemId === cartItemId);
     if (item) item.quantity = body.quantity;
     return HttpResponse.json({ status: 'success', data: item ? toCartItemResponse(item) : item });
