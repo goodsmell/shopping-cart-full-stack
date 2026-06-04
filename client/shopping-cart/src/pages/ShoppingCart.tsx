@@ -9,14 +9,16 @@ import CartItemList from '../components/cart/CartItemList';
 import OutlineButton from '../components/buttons/OutlineButton';
 import infoIcon from '../assets/info_icon.svg';
 import { CheckIcon } from '../components/icons/CheckIcon';
-import { countCartItemTypes, calcOrderAmount } from '../utils/cart';
+import { countCartItemTypes, calcOrderAmount, isFreeShipping } from '../utils/cart';
+
 const ShoppingCart = () => {
   const navigate = useNavigate();
 
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [selectItems, setSelectItems] = useState<string[]>([]);
   const [isAllSelect, setIsAllSelect] = useState<boolean>(false);
-
+  const purchasePrice = calcOrderAmount(cartItems, selectItems);
+  const shippingFee = isFreeShipping(purchasePrice) ? 3000 : 0;
   useEffect(() => {
     const loadCartItems = async () => {
       try {
@@ -167,7 +169,7 @@ const ShoppingCart = () => {
                   font: var(--text-heading);
                 `}
               >
-                {calcOrderAmount(cartItems, selectItems)}
+                {purchasePrice}
               </p>
             </div>
 
@@ -193,7 +195,7 @@ const ShoppingCart = () => {
                   font: var(--text-heading);
                 `}
               >
-                3,000
+                {shippingFee}
               </p>
             </div>
           </section>
@@ -225,7 +227,7 @@ const ShoppingCart = () => {
                   font: var(--text-heading);
                 `}
               >
-                73,000
+                {purchasePrice + shippingFee}
               </p>
             </div>
           </section>

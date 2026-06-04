@@ -7,3 +7,7 @@ export const calcOrderAmount = (cartItems: CartItem[], selectedIds: string[]) =>
     .filter((item) => selectedIds.includes(item.cartItemId))
     .reduce((acc, item) => acc + item.product.price * item.quantity, 0);
 };
+
+export const isFreeShipping = (purchasePrice: number) => {
+  return purchasePrice >= 100000 ? false : true;
+};
