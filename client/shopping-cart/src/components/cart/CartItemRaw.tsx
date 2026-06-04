@@ -6,9 +6,10 @@ type Props = {
   name: string;
   price: number;
   quantity: number;
+  onChangeQuantity: (quantity: number) => void;
 };
 
-const CartItemRaw = ({ image, name, price, quantity }: Props) => {
+const CartItemRaw = ({ image, name, price, quantity, onChangeQuantity }: Props) => {
   return (
     <div
       css={css`
@@ -66,9 +67,9 @@ const CartItemRaw = ({ image, name, price, quantity }: Props) => {
 
         <QuantityControl
           quantity={quantity}
-          onDecrease={() => {}}
-          onIncrease={() => {}}
-        ></QuantityControl>
+          onDecrease={() => onChangeQuantity(quantity - 1)}
+          onIncrease={() => onChangeQuantity(quantity + 1)}
+        />
       </div>
     </div>
   );

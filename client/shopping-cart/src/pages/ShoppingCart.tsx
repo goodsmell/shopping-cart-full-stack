@@ -5,6 +5,7 @@ import AppHeader from '../components/layout/AppHeader';
 import PrimaryButton from '../components/buttons/PrimaryButton';
 import type { CartItem } from '../types';
 import getCartList from '../apis/getCartList';
+import updateCartQuantity from '../apis/updateCartQuantity';
 import CartItemList from '../components/cart/CartItemList';
 import OutlineButton from '../components/buttons/OutlineButton';
 import infoIcon from '../assets/info_icon.svg';
@@ -17,6 +18,7 @@ const ShoppingCart = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [selectItems, setSelectItems] = useState<string[]>([]);
   const [isAllSelect, setIsAllSelect] = useState<boolean>(false);
+
   const purchasePrice = calcOrderAmount(cartItems, selectItems);
   const shippingFee = isFreeShipping(purchasePrice) ? 3000 : 0;
   useEffect(() => {
@@ -46,6 +48,16 @@ const ShoppingCart = () => {
     } else {
       setSelectItems(cartItems.map((item) => item.cartItemId));
       setIsAllSelect(true);
+    }
+  };
+  const handleQuantityChange = async (cartItemId: string, quantity: number) => {
+    try {
+      await updateCartQuantity(cartItemId, quantity);
+      setCartItems((prev) =>
+        prev.map((item) => (item.cartItemId === cartItemId ? { ...item, quantity } : item)),
+      );
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -118,6 +130,7 @@ const ShoppingCart = () => {
             cartItems={cartItems}
             handleSelect={handleToggleSelect}
             selectItems={selectItems}
+            onChangeQuantity={(cartItemId, quantity) => handleQuantityChange(cartItemId, quantity)}
           ></CartItemList>
         </section>
         <span

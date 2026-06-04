@@ -4,9 +4,14 @@ import type { CartItem } from '../../types';
 import OutlineButton from '../buttons/OutlineButton';
 import { CheckIcon } from '../icons/CheckIcon';
 
-type Props = { cartItems: CartItem[]; handleSelect: (id: string) => void; selectItems: string[] };
+type Props = {
+  cartItems: CartItem[];
+  handleSelect: (id: string) => void;
+  selectItems: string[];
+  onChangeQuantity: (cartItemId: string, quantity: number) => void;
+};
 
-const CartItemList = ({ cartItems, handleSelect, selectItems }: Props) => {
+const CartItemList = ({ cartItems, handleSelect, selectItems, onChangeQuantity }: Props) => {
   return (
     <ul
       css={css`
@@ -72,6 +77,7 @@ const CartItemList = ({ cartItems, handleSelect, selectItems }: Props) => {
               name={cartItem.product.name}
               price={cartItem.product.price}
               quantity={cartItem.quantity}
+              onChangeQuantity={(quantity) => onChangeQuantity(cartItem.cartItemId, quantity)}
             ></CartItemRaw>
           </li>
         );

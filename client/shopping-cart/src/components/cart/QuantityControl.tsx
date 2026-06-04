@@ -10,6 +10,7 @@ type Props = {
 };
 
 const QuantityControl = ({ quantity, onIncrease, onDecrease }: Props) => {
+  
   return (
     <div
       css={css`
