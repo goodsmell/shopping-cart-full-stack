@@ -4,9 +4,9 @@ import type { CartItem } from '../../types';
 import OutlineButton from '../buttons/OutlineButton';
 import { CheckIcon } from '../icons/CheckIcon';
 
-type Props = { cartItems: CartItem[] };
+type Props = { cartItems: CartItem[]; handleSelect: (id: string) => void; selectItems: string[] };
 
-const CartItemList = ({ cartItems }: Props) => {
+const CartItemList = ({ cartItems, handleSelect, selectItems }: Props) => {
   return (
     <ul
       css={css`
@@ -27,6 +27,8 @@ const CartItemList = ({ cartItems }: Props) => {
       `}
     >
       {cartItems.map((cartItem) => {
+        const isSelected = selectItems.includes(cartItem.cartItemId);
+
         return (
           <li
             key={cartItem.cartItemId}
@@ -47,8 +49,11 @@ const CartItemList = ({ cartItems }: Props) => {
                 width: 100%;
               `}
             >
-              <OutlineButton onClick={() => {}}>
-                <CheckIcon />
+              <OutlineButton
+                isActive={isSelected}
+                onClick={() => handleSelect(cartItem.cartItemId)}
+              >
+                <CheckIcon isActive={isSelected} />
               </OutlineButton>
 
               <OutlineButton variant="text" onClick={() => {}}>

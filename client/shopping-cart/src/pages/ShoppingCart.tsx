@@ -13,8 +13,10 @@ const ShoppingCart = () => {
   const navigate = useNavigate();
 
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [selectItems, setSelectItems] = useState<string[]>([]);
+  const [isAllSelect, setIsAllSelect] = useState<boolean>(false);
   const count = 1;
-  
+
   useEffect(() => {
     const loadCartItems = async () => {
       try {
@@ -28,6 +30,22 @@ const ShoppingCart = () => {
 
     loadCartItems();
   }, []);
+
+  const handleToggleSelect = (id: string) => {
+    setSelectItems((prev) =>
+      prev.includes(id) ? prev.filter((itemId) => itemId !== id) : [...prev, id],
+    );
+  };
+
+  const handleSelectAll = () => {
+    if (selectItems.length === cartItems.length) {
+      setSelectItems([]);
+      setIsAllSelect(false);
+    } else {
+      setSelectItems(cartItems.map((item) => item.cartItemId));
+      setIsAllSelect(true);
+    }
+  };
 
   return (
     <>
@@ -82,8 +100,8 @@ const ShoppingCart = () => {
               align-items: center;
             `}
           >
-            <OutlineButton onClick={() => {}}>
-              <CheckIcon />
+            <OutlineButton onClick={handleSelectAll} isActive={isAllSelect}>
+              <CheckIcon isActive={isAllSelect} />
             </OutlineButton>
             <p
               css={css`
@@ -94,7 +112,11 @@ const ShoppingCart = () => {
             </p>
           </div>
 
-          <CartItemList cartItems={cartItems}></CartItemList>
+          <CartItemList
+            cartItems={cartItems}
+            handleSelect={handleToggleSelect}
+            selectItems={selectItems}
+          ></CartItemList>
         </section>
         <span
           css={css`
