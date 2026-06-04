@@ -9,13 +9,13 @@ import CartItemList from '../components/cart/CartItemList';
 import OutlineButton from '../components/buttons/OutlineButton';
 import infoIcon from '../assets/info_icon.svg';
 import { CheckIcon } from '../components/icons/CheckIcon';
+import { countCartItemTypes } from '../utils/cart';
 const ShoppingCart = () => {
   const navigate = useNavigate();
 
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [selectItems, setSelectItems] = useState<string[]>([]);
   const [isAllSelect, setIsAllSelect] = useState<boolean>(false);
-  const count = 1;
 
   useEffect(() => {
     const loadCartItems = async () => {
@@ -81,7 +81,7 @@ const ShoppingCart = () => {
           >
             장바구니
           </h2>
-          <p>현재 {count} 종류의 상품이 담겨있습니다.</p>
+          <p>현재 {countCartItemTypes(cartItems)} 종류의 상품이 담겨있습니다.</p>
         </section>
 
         <section
