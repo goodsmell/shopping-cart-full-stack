@@ -9,7 +9,7 @@ import CartItemList from '../components/cart/CartItemList';
 import OutlineButton from '../components/buttons/OutlineButton';
 import infoIcon from '../assets/info_icon.svg';
 import { CheckIcon } from '../components/icons/CheckIcon';
-import { countCartItemTypes } from '../utils/cart';
+import { countCartItemTypes, calcOrderAmount } from '../utils/cart';
 const ShoppingCart = () => {
   const navigate = useNavigate();
 
@@ -167,7 +167,7 @@ const ShoppingCart = () => {
                   font: var(--text-heading);
                 `}
               >
-                120,000
+                {calcOrderAmount(cartItems, selectItems)}
               </p>
             </div>
 
