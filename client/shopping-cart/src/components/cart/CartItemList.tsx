@@ -1,10 +1,10 @@
 import { css } from '@emotion/react';
-import CartItem from './CartItem';
-import type { CartItemWithProduct } from '../../types';
+import CartItemRaw from './CartItemRaw';
+import type { CartItem } from '../../types';
 import OutlineButton from '../buttons/OutlineButton';
 import { CheckIcon } from '../icons/CheckIcon';
 
-type Props = { cartItems: CartItemWithProduct[] };
+type Props = { cartItems: CartItem[] };
 
 const CartItemList = ({ cartItems }: Props) => {
   return (
@@ -53,12 +53,12 @@ const CartItemList = ({ cartItems }: Props) => {
               </OutlineButton>
             </div>
 
-            <CartItem
-              image={cartItem.image}
-              name={cartItem.name}
-              price={cartItem.price}
+            <CartItemRaw
+              image={cartItem.product.image}
+              name={cartItem.product.name}
+              price={cartItem.product.price}
               quantity={cartItem.quantity}
-            ></CartItem>
+            ></CartItemRaw>
           </li>
         );
       })}

@@ -8,8 +8,6 @@ export type Product = {
 
 export type CartItem = {
   cartItemId: string;
-  productId: string;
   quantity: number;
+  product: Product;
 };
-
-export type CartItemWithProduct = CartItem & Product;

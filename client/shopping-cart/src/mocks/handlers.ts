@@ -2,14 +2,38 @@ import { http, HttpResponse } from 'msw';
 
 const BASE_URL = 'http://localhost:3000';
 
-const mockProducts = [
+type Product = {
+  productId: string;
+  name: string;
+  price: number;
+  image: string;
+  stock: number;
+};
+
+type StoredCartItem = {
+  cartItemId: string;
+  productId: string;
+  quantity: number;
+};
+
+const mockProducts: Product[] = [
   { productId: '1', name: '상품 A', price: 10000, image: 'https://via.placeholder.com/150', stock: 10 },
   { productId: '2', name: '상품 B', price: 20000, image: 'https://via.placeholder.com/150', stock: 5 },
 ];
 
-const mockCartItems = [
+const mockCartItems: StoredCartItem[] = [
   { cartItemId: '1', productId: '1', quantity: 2 },
 ];
+
+const toCartItemResponse = (cartItem: StoredCartItem) => {
+  const product = mockProducts.find((item) => item.productId === cartItem.productId);
+
+  return {
+    cartItemId: cartItem.cartItemId,
+    quantity: cartItem.quantity,
+    product,
+  };
+};
 
 export const handlers = [
   http.get(`${BASE_URL}/products`, () => {
@@ -29,14 +53,14 @@ export const handlers = [
   }),
 
   http.get(`${BASE_URL}/cart`, () => {
-    return HttpResponse.json({ status: 'success', data: mockCartItems });
+    return HttpResponse.json({ status: 'success', data: mockCartItems.map(toCartItemResponse) });
   }),
 
   http.post(`${BASE_URL}/cart`, async ({ request }) => {
     const body = await request.json() as { productId: string; quantity: number };
     const newItem = { cartItemId: String(mockCartItems.length + 1), ...body };
     mockCartItems.push(newItem);
-    return HttpResponse.json({ status: 'success', data: newItem }, { status: 201 });
+    return HttpResponse.json({ status: 'success', data: toCartItemResponse(newItem) }, { status: 201 });
   }),
 
   http.patch(`${BASE_URL}/cart/:cartItemId`, async ({ params, request }) => {
@@ -44,7 +68,7 @@ export const handlers = [
     const body = await request.json() as { quantity: number };
     const item = mockCartItems.find((i) => i.cartItemId === cartItemId);
     if (item) item.quantity = body.quantity;
-    return HttpResponse.json({ status: 'success', data: item });
+    return HttpResponse.json({ status: 'success', data: item ? toCartItemResponse(item) : item });
   }),
 
   http.delete(`${BASE_URL}/cart/:cartItemId`, ({ params }) => {
