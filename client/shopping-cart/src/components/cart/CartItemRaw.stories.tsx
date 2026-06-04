@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import CartItem from './CartItem';
+import CartItemRaw from './CartItemRaw';
 
-const meta: Meta<typeof CartItem> = {
-  component: CartItem,
+const meta: Meta<typeof CartItemRaw> = {
+  component: CartItemRaw,
 };
 
 export default meta;
-type Story = StoryObj<typeof CartItem>;
+type Story = StoryObj<typeof CartItemRaw>;
 
 export const Default: Story = {
   args: {

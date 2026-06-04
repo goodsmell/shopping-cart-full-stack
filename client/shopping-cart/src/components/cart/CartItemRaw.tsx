@@ -1,10 +1,14 @@
 import { css } from '@emotion/react';
-import type { CartItemWithProduct } from '../../types';
 import QuantityControl from './QuantityControl';
 
-type Props = Pick<CartItemWithProduct, 'image' | 'name' | 'price' | 'quantity'>;
+type Props = {
+  image: string;
+  name: string;
+  price: number;
+  quantity: number;
+};
 
-const CartItem = ({ image, name, price, quantity }: Props) => {
+const CartItemRaw = ({ image, name, price, quantity }: Props) => {
   return (
     <div
       css={css`
@@ -69,4 +73,4 @@ const CartItem = ({ image, name, price, quantity }: Props) => {
     </div>
   );
 };
-export default CartItem;
+export default CartItemRaw;
