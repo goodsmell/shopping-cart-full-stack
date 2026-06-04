@@ -8,6 +8,7 @@ type Props = {
   children: ReactNode;
   isActive?: boolean;
   variant?: Variant;
+  disabled?: boolean;
 };
 
 const baseStyle = (isPressed: boolean) => css`
@@ -43,14 +44,15 @@ const variantStyles = {
   `,
 } satisfies Record<Variant, ReturnType<typeof css>>;
 
-const OutlineButton = ({ onClick, children, isActive, variant = 'icon' }: Props) => {
+const OutlineButton = ({ onClick, children, isActive, variant = 'icon', disabled }: Props) => {
   const isPressed = isActive ?? false;
 
   return (
     <button
       type="button"
       aria-pressed={isActive}
-      css={[baseStyle(isPressed), variantStyles[variant]]}
+      disabled={disabled}
+      css={[baseStyle(isPressed), variantStyles[variant], disabled && css`cursor: not-allowed; opacity: 0.4;`]}
       onClick={onClick}
     >
       {children}

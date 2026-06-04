@@ -10,7 +10,6 @@ type Props = {
 };
 
 const QuantityControl = ({ quantity, onIncrease, onDecrease }: Props) => {
-  
   return (
     <div
       css={css`
@@ -19,7 +18,7 @@ const QuantityControl = ({ quantity, onIncrease, onDecrease }: Props) => {
         gap: 4px;
       `}
     >
-      <OutlineButton onClick={onDecrease}>
+      <OutlineButton onClick={onDecrease} disabled={quantity <= 1}>
         <img src={minusIcon} />
       </OutlineButton>
       <p
@@ -32,7 +31,7 @@ const QuantityControl = ({ quantity, onIncrease, onDecrease }: Props) => {
       >
         {quantity}
       </p>
-      <OutlineButton onClick={onIncrease}>
+      <OutlineButton onClick={onIncrease} disabled={quantity >= 99}>
         <img src={plusIcon} />
       </OutlineButton>
     </div>
