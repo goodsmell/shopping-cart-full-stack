@@ -12,6 +12,9 @@ import infoIcon from '../assets/info_icon.svg';
 import { CheckIcon } from '../components/icons/CheckIcon';
 import { countCartItemTypes, calcOrderAmount, isFreeShipping } from '../utils/cart';
 import deleteCartItem from '../apis/deleteCartItem';
+import CartItemSkeleton from '../components/cart/CartItemSkeleton';
+
+//TODO : 로딩, 에러, 스켈레톤, hook분리, 상태관리 개선, DI 고려, 응집도 결합도 고려
 
 const ShoppingCart = () => {
   const navigate = useNavigate();
@@ -19,18 +22,21 @@ const ShoppingCart = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [selectItems, setSelectItems] = useState<string[]>([]);
   const [isAllSelect, setIsAllSelect] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const purchasePrice = calcOrderAmount(cartItems, selectItems);
   const shippingFee = isFreeShipping(purchasePrice) && selectItems.length >= 1 ? 3000 : 0;
   const totalPurchasePrice = purchasePrice + shippingFee;
+  
   useEffect(() => {
     const loadCartItems = async () => {
       try {
         const data = await getCartList();
-        console.log(data);
         setCartItems(data);
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -114,7 +120,19 @@ const ShoppingCart = () => {
           )}
         </section>
 
-        {cartItems.length === 0 ? (
+        {isLoading ? (
+          <ul
+            css={css`
+              list-style: none;
+              margin: 0;
+              padding: 0;
+            `}
+          >
+            {Array.from({ length: 3 }).map((_, i) => (
+              <CartItemSkeleton key={i} />
+            ))}
+          </ul>
+        ) : cartItems.length === 0 ? (
           <p
             css={css`
               font: var(--text-label);
@@ -127,7 +145,8 @@ const ShoppingCart = () => {
           >
             장바구니에 담은 상품이 없습니다.
           </p>
-        ) : (
+        ) : null}
+        {!isLoading && cartItems.length > 0 && (
           <>
             <section
               css={css`
