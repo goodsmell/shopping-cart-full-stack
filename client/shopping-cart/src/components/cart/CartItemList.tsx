@@ -9,9 +9,16 @@ type Props = {
   handleSelect: (id: string) => void;
   selectItems: string[];
   onChangeQuantity: (cartItemId: string, quantity: number) => void;
+  onDelete: (cartItemId: string) => void;
 };
 
-const CartItemList = ({ cartItems, handleSelect, selectItems, onChangeQuantity }: Props) => {
+const CartItemList = ({
+  cartItems,
+  handleSelect,
+  selectItems,
+  onChangeQuantity,
+  onDelete,
+}: Props) => {
   return (
     <ul
       css={css`
@@ -61,7 +68,12 @@ const CartItemList = ({ cartItems, handleSelect, selectItems, onChangeQuantity }
                 <CheckIcon isActive={isSelected} />
               </OutlineButton>
 
-              <OutlineButton variant="text" onClick={() => {}}>
+              <OutlineButton
+                variant="text"
+                onClick={() => {
+                  onDelete(cartItem.cartItemId);
+                }}
+              >
                 <p
                   css={css`
                     font: var(--text-label);
