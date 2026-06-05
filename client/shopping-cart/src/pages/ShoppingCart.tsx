@@ -89,8 +89,10 @@ const ShoppingCart = () => {
         css={css`
           display: flex;
           flex-direction: column;
+          flex: 1;
           gap: 36px;
-          padding: 0 24px;
+          padding: 36px 24px;
+          overflow-y: auto;
         `}
       >
         <section
@@ -107,157 +109,180 @@ const ShoppingCart = () => {
           >
             장바구니
           </h2>
-          <p>현재 {countCartItemTypes(cartItems)} 종류의 상품이 담겨있습니다.</p>
+          {cartItems.length !== 0 && (
+            <p>현재 {countCartItemTypes(cartItems)} 종류의 상품이 담겨있습니다.</p>
+          )}
         </section>
 
-        <section
-          css={css`
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            max-height: 340px;
-          `}
-        >
-          <div
-            css={css`
-              display: flex;
-              flex-direction: row;
-              gap: 8px;
-              align-items: center;
-            `}
-          >
-            <OutlineButton onClick={handleSelectAll} isActive={isAllSelect}>
-              <CheckIcon isActive={isAllSelect} />
-            </OutlineButton>
-            <p
-              css={css`
-                font: var(--text-label);
-              `}
-            >
-              전체 선택
-            </p>
-          </div>
-
-          <CartItemList
-            cartItems={cartItems}
-            handleSelect={handleToggleSelect}
-            selectItems={selectItems}
-            onChangeQuantity={(cartItemId, quantity) => handleQuantityChange(cartItemId, quantity)}
-            onDelete={(cartItemId) => handleDeleteItem(cartItemId)}
-          ></CartItemList>
-        </section>
-        <span
-          css={css`
-            display: flex;
-            flex-direction: row;
-            gap: 4px;
-            align-items: center;
-          `}
-        >
-          <img src={infoIcon} />
+        {cartItems.length === 0 ? (
           <p
             css={css`
               font: var(--text-label);
-            `}
-          >
-            총 주문 금액이 100,000원 이상일 경우 무료 배송됩니다.
-          </p>
-        </span>
-
-        <div>
-          {/* 주문금액 + 배송비 */}
-          <section
-            css={css`
+              text-align: center;
+              flex: 1;
               display: flex;
-              flex-direction: column;
-              gap: 8px;
-              border-top: 1px solid var(--color-line);
+              align-items: center;
+              justify-content: center;
             `}
           >
-            <div
+            장바구니에 담은 상품이 없습니다.
+          </p>
+        ) : (
+          <>
+            <section
               css={css`
                 display: flex;
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-                padding: 8px 0;
+                flex-direction: column;
+                gap: 20px;
+                max-height: 382px;
               `}
             >
-              <h3
+              <div
                 css={css`
-                  font: var(--text-subheading);
+                  display: flex;
+                  flex-direction: row;
+                  gap: 8px;
+                  align-items: center;
                 `}
               >
-                주문 금액
-              </h3>
-              <p
-                css={css`
-                  font: var(--text-heading);
-                `}
-              >
-                {purchasePrice}
-              </p>
-            </div>
+                <OutlineButton onClick={handleSelectAll} isActive={isAllSelect}>
+                  <CheckIcon isActive={isAllSelect} />
+                </OutlineButton>
+                <p
+                  css={css`
+                    font: var(--text-label);
+                  `}
+                >
+                  전체 선택
+                </p>
+              </div>
 
-            <div
-              css={css`
-                display: flex;
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
+              <CartItemList
+                cartItems={cartItems}
+                handleSelect={handleToggleSelect}
+                selectItems={selectItems}
+                onChangeQuantity={(cartItemId, quantity) =>
+                  handleQuantityChange(cartItemId, quantity)
+                }
+                onDelete={(cartItemId) => handleDeleteItem(cartItemId)}
+              ></CartItemList>
+            </section>
+            <section>
+              <span
+                css={css`
+                  display: flex;
+                  flex-direction: row;
+                  gap: 4px;
+                  align-items: center;
+                `}
+              >
+                <img src={infoIcon} />
+                <p
+                  css={css`
+                    font: var(--text-label);
+                  `}
+                >
+                  총 주문 금액이 100,000원 이상일 경우 무료 배송됩니다.
+                </p>
+              </span>
 
-                padding: 8px 0;
-              `}
-            >
-              <h3
-                css={css`
-                  font: var(--text-subheading);
-                `}
-              >
-                배송비
-              </h3>
-              <p
-                css={css`
-                  font: var(--text-heading);
-                `}
-              >
-                {shippingFee}
-              </p>
-            </div>
-          </section>
-          {/* 총 결제금액 */}
-          <section
-            css={css`
-              border-top: 1px solid var(--color-line);
-            `}
-          >
-            <div
-              css={css`
-                display: flex;
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
+              <div>
+                {/* 주문금액 + 배송비 */}
+                <section
+                  css={css`
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+                    border-top: 1px solid var(--color-line);
+                  `}
+                >
+                  <div
+                    css={css`
+                      display: flex;
+                      flex-direction: row;
+                      justify-content: space-between;
+                      align-items: center;
+                      padding: 8px 0;
+                    `}
+                  >
+                    <h3
+                      css={css`
+                        font: var(--text-subheading);
+                      `}
+                    >
+                      주문 금액
+                    </h3>
+                    <p
+                      css={css`
+                        font: var(--text-heading);
+                      `}
+                    >
+                      {purchasePrice}
+                    </p>
+                  </div>
 
-                padding: 8px 0;
-              `}
-            >
-              <h3
-                css={css`
-                  font: var(--text-subheading);
-                `}
-              >
-                총 결제 금액
-              </h3>
-              <p
-                css={css`
-                  font: var(--text-heading);
-                `}
-              >
-                {totalPurchasePrice}
-              </p>
-            </div>
-          </section>
-        </div>
+                  <div
+                    css={css`
+                      display: flex;
+                      flex-direction: row;
+                      justify-content: space-between;
+                      align-items: center;
+
+                      padding: 8px 0;
+                    `}
+                  >
+                    <h3
+                      css={css`
+                        font: var(--text-subheading);
+                      `}
+                    >
+                      배송비
+                    </h3>
+                    <p
+                      css={css`
+                        font: var(--text-heading);
+                      `}
+                    >
+                      {shippingFee}
+                    </p>
+                  </div>
+                </section>
+                {/* 총 결제금액 */}
+                <section
+                  css={css`
+                    border-top: 1px solid var(--color-line);
+                  `}
+                >
+                  <div
+                    css={css`
+                      display: flex;
+                      flex-direction: row;
+                      justify-content: space-between;
+                      align-items: center;
+
+                      padding: 8px 0;
+                    `}
+                  >
+                    <h3
+                      css={css`
+                        font: var(--text-subheading);
+                      `}
+                    >
+                      총 결제 금액
+                    </h3>
+                    <p
+                      css={css`
+                        font: var(--text-heading);
+                      `}
+                    >
+                      {totalPurchasePrice}
+                    </p>
+                  </div>
+                </section>
+              </div>
+            </section>
+          </>
+        )}
       </main>
 
       <PrimaryButton
