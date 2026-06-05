@@ -6,14 +6,14 @@ import backIcon from '../assets/back_icon.svg';
 import type { CartItem } from '../types';
 type OrderConfirmState = {
   selectedItems: CartItem[];
-  purchasePrice: number;
+  totalPurchasePrice: number;
 };
 
 const OrderConfirm = () => {
   const navigate = useNavigate();
   const { state } = useLocation() as { state: OrderConfirmState | null };
 
-  if (!state) {
+  if (!state?.selectedItems || state?.selectedItems.length < 1) {
     return <Navigate to="/" />;
   }
   const totalQuantity = state.selectedItems.reduce((acc, item) => acc + item.quantity, 0);
@@ -78,7 +78,7 @@ const OrderConfirm = () => {
               font: var(--text-heading);
             `}
           >
-            {state.purchasePrice}원
+            {state.totalPurchasePrice}원
           </h2>
         </section>
       </div>

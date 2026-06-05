@@ -21,7 +21,8 @@ const ShoppingCart = () => {
   const [isAllSelect, setIsAllSelect] = useState<boolean>(false);
 
   const purchasePrice = calcOrderAmount(cartItems, selectItems);
-  const shippingFee = isFreeShipping(purchasePrice) ? 3000 : 0;
+  const shippingFee = isFreeShipping(purchasePrice) && selectItems.length >= 1 ? 3000 : 0;
+  const totalPurchasePrice = purchasePrice + shippingFee;
   useEffect(() => {
     const loadCartItems = async () => {
       try {
@@ -66,6 +67,7 @@ const ShoppingCart = () => {
     try {
       await deleteCartItem(cartItemId);
       setCartItems((prev) => prev.filter((item) => item.cartItemId !== cartItemId));
+      setSelectItems((prev) => prev.filter((id) => id !== cartItemId));
     } catch (error) {
       console.error(error);
     }
@@ -251,7 +253,7 @@ const ShoppingCart = () => {
                   font: var(--text-heading);
                 `}
               >
-                {purchasePrice + shippingFee}
+                {totalPurchasePrice}
               </p>
             </div>
           </section>
@@ -260,11 +262,12 @@ const ShoppingCart = () => {
 
       <PrimaryButton
         text="주문 확인"
+        isDisabled={selectItems.length === 0}
         onClick={() => {
           navigate('/order', {
             state: {
               selectedItems: cartItems.filter((item) => selectItems.includes(item.cartItemId)),
-              purchasePrice,
+              totalPurchasePrice,
             },
           });
         }}
