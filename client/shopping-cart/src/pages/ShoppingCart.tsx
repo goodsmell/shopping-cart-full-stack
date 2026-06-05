@@ -1,10 +1,8 @@
 import { css } from '@emotion/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import AppHeader from '../components/layout/AppHeader';
 import PrimaryButton from '../components/buttons/PrimaryButton';
-import type { CartItem } from '../types';
-import getCartList from '../apis/getCartList';
 import updateCartQuantity from '../apis/updateCartQuantity';
 import CartItemList from '../components/cart/CartItemList';
 import OutlineButton from '../components/buttons/OutlineButton';
@@ -13,35 +11,20 @@ import { CheckIcon } from '../components/icons/CheckIcon';
 import { countCartItemTypes, calcOrderAmount, isFreeShipping } from '../utils/cart';
 import deleteCartItem from '../apis/deleteCartItem';
 import CartItemSkeleton from '../components/cart/CartItemSkeleton';
+import useCartItems from '../hooks/useCartItems';
 
-//TODO : 로딩, 에러, 스켈레톤, hook분리, 상태관리 개선, DI 고려, 응집도 결합도 고려
+//TODO : 에러, 스켈레톤, hook분리, 상태관리 개선, DI 고려, 응집도 결합도 고려
 
 const ShoppingCart = () => {
   const navigate = useNavigate();
 
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const { cartItems, setCartItems, isLoading, isError } = useCartItems();
   const [selectItems, setSelectItems] = useState<string[]>([]);
   const [isAllSelect, setIsAllSelect] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const purchasePrice = calcOrderAmount(cartItems, selectItems);
   const shippingFee = isFreeShipping(purchasePrice) && selectItems.length >= 1 ? 3000 : 0;
   const totalPurchasePrice = purchasePrice + shippingFee;
-  
-  useEffect(() => {
-    const loadCartItems = async () => {
-      try {
-        const data = await getCartList();
-        setCartItems(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadCartItems();
-  }, []);
 
   const handleToggleSelect = (id: string) => {
     setSelectItems((prev) =>
@@ -70,12 +53,15 @@ const ShoppingCart = () => {
   };
 
   const handleDeleteItem = async (cartItemId: string) => {
+    if (!window.confirm('장바구니에서 삭제하시겠습니까?')) return;
+    const itemName = cartItems.find((item) => item.cartItemId === cartItemId)?.product.name;
     try {
       await deleteCartItem(cartItemId);
       setCartItems((prev) => prev.filter((item) => item.cartItemId !== cartItemId));
       setSelectItems((prev) => prev.filter((id) => id !== cartItemId));
     } catch (error) {
-      console.error(error);
+      console.log(error);
+      alert(`${itemName} 삭제에 실패했습니다.`);
     }
   };
 
@@ -120,7 +106,20 @@ const ShoppingCart = () => {
           )}
         </section>
 
-        {isLoading ? (
+        {isError ? (
+          <p
+            css={css`
+              font: var(--text-label);
+              text-align: center;
+              flex: 1;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            `}
+          >
+            장바구니를 불러오는 데 실패했습니다.
+          </p>
+        ) : isLoading ? (
           <ul
             css={css`
               list-style: none;
