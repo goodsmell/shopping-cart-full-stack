@@ -12,6 +12,7 @@ import infoIcon from '../assets/info_icon.svg';
 import { CheckIcon } from '../components/icons/CheckIcon';
 import { countCartItemTypes, calcOrderAmount, isFreeShipping } from '../utils/cart';
 import deleteCartItem from '../apis/deleteCartItem';
+
 const ShoppingCart = () => {
   const navigate = useNavigate();
 
@@ -260,7 +261,12 @@ const ShoppingCart = () => {
       <PrimaryButton
         text="주문 확인"
         onClick={() => {
-          navigate('/order');
+          navigate('/order', {
+            state: {
+              selectedItems: cartItems.filter((item) => selectItems.includes(item.cartItemId)),
+              purchasePrice,
+            },
+          });
         }}
       />
     </>
