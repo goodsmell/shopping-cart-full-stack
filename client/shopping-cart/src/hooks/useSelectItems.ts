@@ -1,10 +1,17 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import type { CartItem } from '../types';
 import useLocalStorage from './useLocalStorage';
 
 const useSelectItems = (cartItems: CartItem[]) => {
+  const isFirstVisit = localStorage.getItem('selectItems') === null;
   const [selectItems, setSelectItems] = useLocalStorage<string[]>('selectItems', []);
-  const [isAllSelect, setIsAllSelect] = useState<boolean>(false);
+  const isAllSelect = cartItems.length > 0 && selectItems.length === cartItems.length;
+
+  useEffect(() => {
+    if (isFirstVisit && cartItems.length > 0) {
+      setSelectItems(cartItems.map((item) => item.cartItemId));
+    }
+  }, [cartItems, isFirstVisit, setSelectItems]);
 
   const handleToggleSelect = (id: string) => {
     setSelectItems((prev) =>
@@ -13,12 +20,10 @@ const useSelectItems = (cartItems: CartItem[]) => {
   };
 
   const handleSelectAll = () => {
-    if (selectItems.length === cartItems.length) {
+    if (isAllSelect) {
       setSelectItems([]);
-      setIsAllSelect(false);
     } else {
       setSelectItems(cartItems.map((item) => item.cartItemId));
-      setIsAllSelect(true);
     }
   };
 
