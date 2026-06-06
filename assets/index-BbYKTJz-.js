@@ -65,7 +65,7 @@ Please change the parent <Route path="${e}"> to <Route path="${e===`/`?`*`:`${e}
               font: var(--text-subheading);
             `,children:`총 결제 금액`}),R(`h2`,{css:I`
               font: var(--text-heading);
-            `,children:[Ji(t.totalPurchasePrice),`원`]})]})]}),L(Gi,{text:`결제하기`,onClick:()=>{}})]})},Qi=`http://localhost:3000`,$i=async()=>{let e=await fetch(`${Qi}/cart`);if(!e.ok)throw Error(`장바구니 목록 조회에 실패했습니다.`);return(await e.json()).data},ea=async(e,t)=>{let n=await fetch(`${Qi}/cart/${e}`,{method:`PATCH`,headers:{"Content-Type":`application/json`},body:JSON.stringify({quantity:t})});if(!n.ok)throw Error(`수량 변경에 실패했습니다.`);return(await n.json()).data},ta=async e=>{let t=await fetch(`${Qi}/cart/${e}`,{method:`DELETE`,headers:{"Content-Type":`application/json`}});if(!t.ok)throw Error(`장바구니 삭제에 실패했습니다.`);return(await t.json()).data},na=zi`
+            `,children:[Ji(t.totalPurchasePrice),`원`]})]})]}),L(Gi,{text:`결제하기`,onClick:()=>{}})]})},Qi=`https://shopping-cart-full-stack-production-b68a.up.railway.app`,$i=async()=>{let e=await fetch(`${Qi}/cart`);if(!e.ok)throw Error(`장바구니 목록 조회에 실패했습니다.`);return(await e.json()).data},ea=async(e,t)=>{let n=await fetch(`${Qi}/cart/${e}`,{method:`PATCH`,headers:{"Content-Type":`application/json`},body:JSON.stringify({quantity:t})});if(!n.ok)throw Error(`수량 변경에 실패했습니다.`);return(await n.json()).data},ta=async e=>{let t=await fetch(`${Qi}/cart/${e}`,{method:`DELETE`,headers:{"Content-Type":`application/json`}});if(!t.ok)throw Error(`장바구니 삭제에 실패했습니다.`);return(await t.json()).data},na=zi`
   0% { background-position: -200px 0; }
   100% { background-position: 200px 0; }
 `,ra=(e,t)=>I`
