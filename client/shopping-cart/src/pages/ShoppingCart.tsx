@@ -12,41 +12,25 @@ import deleteCartItem from '../apis/deleteCartItem';
 import CartItemSkeleton from '../components/cart/CartItemSkeleton';
 import useCartItems from '../hooks/useCartItems';
 import useSelectItems from '../hooks/useSelectItems';
-//TODO : 에러, 스켈레톤, hook분리, 상태관리 개선, DI 고려, 응집도 결합도 고려
+import useCartActions from '../hooks/useCartActions';
+import getCartList from '../apis/getCartList';
 
 const ShoppingCart = () => {
   const navigate = useNavigate();
-  const { cartItems, setCartItems, isLoading, isError } = useCartItems();
+  const { cartItems, setCartItems, isLoading, isError } = useCartItems(getCartList);
   const { selectItems, isAllSelect, handleToggleSelect, handleSelectAll, removeSelectItem } =
     useSelectItems(cartItems);
-    
+  const { handleQuantityChange, handleDeleteItem } = useCartActions({
+    cartItems,
+    setCartItems,
+    removeSelectItem,
+    updateQuantity: updateCartQuantity,
+    deleteItem: deleteCartItem,
+  });
+
   const purchasePrice = calcOrderAmount(cartItems, selectItems);
   const shippingFee = isFreeShipping(purchasePrice) && selectItems.length >= 1 ? 3000 : 0;
   const totalPurchasePrice = purchasePrice + shippingFee;
-
-  const handleQuantityChange = async (cartItemId: string, quantity: number) => {
-    try {
-      await updateCartQuantity(cartItemId, quantity);
-      setCartItems((prev) =>
-        prev.map((item) => (item.cartItemId === cartItemId ? { ...item, quantity } : item)),
-      );
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleDeleteItem = async (cartItemId: string) => {
-    if (!window.confirm('장바구니에서 삭제하시겠습니까?')) return;
-    const itemName = cartItems.find((item) => item.cartItemId === cartItemId)?.product.name;
-    try {
-      await deleteCartItem(cartItemId);
-      setCartItems((prev) => prev.filter((item) => item.cartItemId !== cartItemId));
-      removeSelectItem(cartItemId);
-    } catch (error) {
-      console.log(error);
-      alert(`${itemName} 삭제에 실패했습니다.`);
-    }
-  };
 
   return (
     <>
