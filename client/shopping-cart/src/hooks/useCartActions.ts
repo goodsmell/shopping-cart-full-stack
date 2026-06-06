@@ -16,13 +16,16 @@ const useCartActions = ({
   deleteItem,
 }: CartActionsParams) => {
   const handleQuantityChange = async (cartItemId: string, quantity: number) => {
+    const itemName = cartItems.find((item) => item.cartItemId === cartItemId)?.product.name;
+
     try {
-      await updateQuantity(cartItemId, quantity);
+      const updatedCartItem = await updateQuantity(cartItemId, quantity);
       setCartItems((prev) =>
-        prev.map((item) => (item.cartItemId === cartItemId ? { ...item, quantity } : item)),
+        prev.map((item) => (item.cartItemId === cartItemId ? updatedCartItem : item)),
       );
     } catch (error) {
       console.error(error);
+      alert(`${itemName} 수량 변경에 실패했습니다.`);
     }
   };
 

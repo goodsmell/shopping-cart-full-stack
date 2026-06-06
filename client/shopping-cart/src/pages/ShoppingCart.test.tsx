@@ -1,9 +1,11 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { http, HttpResponse } from 'msw';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import ShoppingCart from './ShoppingCart';
 import AppLayout from '../components/layout/AppLayout';
+import { server } from '../mocks/server';
 
 const renderShoppingCart = () => {
   render(
@@ -17,6 +19,7 @@ const renderShoppingCart = () => {
 
 beforeEach(() => {
   localStorage.clear();
+  vi.restoreAllMocks();
 });
 
 describe('ShoppingCart', () => {
@@ -79,5 +82,55 @@ describe('ShoppingCart', () => {
       const prices = screen.getAllByText('148,000');
       expect(prices.length).toBeGreaterThanOrEqual(1);
     });
+  });
+
+  it('상품 수량을 변경하면 수량과 결제 금액이 함께 변경된다', async () => {
+    renderShoppingCart();
+    const cartItem = await screen.findByText('데일리 라운드 티셔츠');
+    const cartItemRow = cartItem.closest('li');
+
+    expect(cartItemRow).not.toBeNull();
+    if (!cartItemRow) return;
+
+    const buttons = within(cartItemRow).getAllByRole('button');
+    const increaseButton = buttons[3];
+
+    await userEvent.click(increaseButton);
+
+    await waitFor(() => {
+      expect(within(cartItemRow).getByText('3')).toBeInTheDocument();
+      const prices = screen.getAllByText('178,000');
+      expect(prices.length).toBeGreaterThanOrEqual(1);
+    });
+  });
+
+  it('상품 수량 변경이 실패하면 안내 메시지를 보여주고 기존 수량을 유지한다', async () => {
+    server.use(
+      http.patch('http://localhost:3000/cart/:cartItemId', () => {
+        return HttpResponse.json({ message: 'error' }, { status: 500 });
+      }),
+    );
+
+    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {});
+
+    renderShoppingCart();
+    const cartItem = await screen.findByText('데일리 라운드 티셔츠');
+    const cartItemRow = cartItem.closest('li');
+
+    expect(cartItemRow).not.toBeNull();
+    if (!cartItemRow) return;
+
+    const quantityText = within(cartItemRow).getAllByText(/^\d+$/)[0];
+    const initialQuantity = quantityText.textContent;
+    const buttons = within(cartItemRow).getAllByRole('button');
+    const increaseButton = buttons[3];
+
+    await userEvent.click(increaseButton);
+
+    await waitFor(() => {
+      expect(alertSpy).toHaveBeenCalledWith('데일리 라운드 티셔츠 수량 변경에 실패했습니다.');
+    });
+
+    expect(quantityText.textContent).toBe(initialQuantity);
   });
 });
