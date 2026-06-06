@@ -1,13 +1,15 @@
 import { css } from '@emotion/react';
 import { useNavigate } from 'react-router';
-import AppHeader from '../components/layout/AppHeader';
+import { deleteCartItem, getCartList, updateCartQuantity } from '../apis/cartApi';
 import PrimaryButton from '../components/buttons/PrimaryButton';
-import { getCartList, updateCartQuantity, deleteCartItem } from '../apis/cartApi';
-import { countCartItemTypes, calcOrderAmount, isFreeShipping } from '../utils/cart';
 import CartContent from '../components/cart/CartContent';
+import CartSection from '../components/cart/CartSection';
+import OrderSummary from '../components/cart/OrderSummary';
+import AppHeader from '../components/layout/AppHeader';
+import useCartActions from '../hooks/useCartActions';
 import useCartItems from '../hooks/useCartItems';
 import useSelectItems from '../hooks/useSelectItems';
-import useCartActions from '../hooks/useCartActions';
+import { countCartItemTypes, calcOrderAmount, isFreeShipping } from '../utils/cart';
 
 const ShoppingCart = () => {
   const navigate = useNavigate();
@@ -67,20 +69,22 @@ const ShoppingCart = () => {
           )}
         </section>
 
-        <CartContent
-          cartItems={cartItems}
-          selectItems={selectItems}
-          isAllSelect={isAllSelect}
-          isLoading={isLoading}
-          isError={isError}
-          purchasePrice={purchasePrice}
-          shippingFee={shippingFee}
-          totalPurchasePrice={totalPurchasePrice}
-          onSelectAll={handleSelectAll}
-          onSelect={handleToggleSelect}
-          onChangeQuantity={handleQuantityChange}
-          onDelete={handleDeleteItem}
-        />
+        <CartContent cartItems={cartItems} isLoading={isLoading} isError={isError}>
+          <CartSection
+            cartItems={cartItems}
+            selectItems={selectItems}
+            isAllSelect={isAllSelect}
+            onSelectAll={handleSelectAll}
+            onSelect={handleToggleSelect}
+            onChangeQuantity={handleQuantityChange}
+            onDelete={handleDeleteItem}
+          />
+          <OrderSummary
+            purchasePrice={purchasePrice}
+            shippingFee={shippingFee}
+            totalPurchasePrice={totalPurchasePrice}
+          />
+        </CartContent>
       </main>
 
       <PrimaryButton
@@ -98,4 +102,5 @@ const ShoppingCart = () => {
     </>
   );
 };
+
 export default ShoppingCart;

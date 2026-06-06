@@ -10,8 +10,8 @@ type Props = {
   isAllSelect: boolean;
   onSelectAll: () => void;
   onSelect: (id: string) => void;
-  onChangeQuantity: (cartItemId: string, quantity: number) => void;
-  onDelete: (cartItemId: string) => void;
+  onChangeQuantity: (cartItemId: string, quantity: number) => Promise<void>;
+  onDelete: (cartItemId: string) => Promise<void>;
 };
 
 const CartSection = ({
@@ -23,6 +23,7 @@ const CartSection = ({
   onChangeQuantity,
   onDelete,
 }: Props) => {
+
   return (
     <section
       css={css`

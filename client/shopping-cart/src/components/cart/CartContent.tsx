@@ -1,38 +1,16 @@
 import { css } from '@emotion/react';
+import type { ReactNode } from 'react';
 import type { CartItem } from '../../types';
 import CartItemSkeleton from './CartItemSkeleton';
-import CartSection from './CartSection';
-import OrderSummary from './OrderSummary';
 
 type Props = {
+  children: ReactNode;
   cartItems: CartItem[];
-  selectItems: string[];
-  isAllSelect: boolean;
   isLoading: boolean;
   isError: boolean;
-  purchasePrice: number;
-  shippingFee: number;
-  totalPurchasePrice: number;
-  onSelectAll: () => void;
-  onSelect: (id: string) => void;
-  onChangeQuantity: (cartItemId: string, quantity: number) => void;
-  onDelete: (cartItemId: string) => void;
 };
 
-const CartContent = ({
-  cartItems,
-  selectItems,
-  isAllSelect,
-  isLoading,
-  isError,
-  purchasePrice,
-  shippingFee,
-  totalPurchasePrice,
-  onSelectAll,
-  onSelect,
-  onChangeQuantity,
-  onDelete,
-}: Props) => {
+const CartContent = ({ children, cartItems, isLoading, isError }: Props) => {
   if (isError) {
     return (
       <p
@@ -83,24 +61,7 @@ const CartContent = ({
     );
   }
 
-  return (
-    <>
-      <CartSection
-        cartItems={cartItems}
-        selectItems={selectItems}
-        isAllSelect={isAllSelect}
-        onSelectAll={onSelectAll}
-        onSelect={onSelect}
-        onChangeQuantity={onChangeQuantity}
-        onDelete={onDelete}
-      />
-      <OrderSummary
-        purchasePrice={purchasePrice}
-        shippingFee={shippingFee}
-        totalPurchasePrice={totalPurchasePrice}
-      />
-    </>
-  );
+  return children;
 };
 
 export default CartContent;

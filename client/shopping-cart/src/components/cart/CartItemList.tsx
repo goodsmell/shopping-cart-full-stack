@@ -1,15 +1,15 @@
 import { css } from '@emotion/react';
-import CartItemRaw from './CartItemRaw';
 import type { CartItem } from '../../types';
 import OutlineButton from '../buttons/OutlineButton';
 import { CheckIcon } from '../icons/CheckIcon';
+import CartItemRaw from './CartItemRaw';
 
 type Props = {
   cartItems: CartItem[];
   handleSelect: (id: string) => void;
   selectItems: string[];
-  onChangeQuantity: (cartItemId: string, quantity: number) => void;
-  onDelete: (cartItemId: string) => void;
+  onChangeQuantity: (cartItemId: string, quantity: number) => Promise<void>;
+  onDelete: (cartItemId: string) => Promise<void>;
 };
 
 const CartItemList = ({
@@ -68,12 +68,7 @@ const CartItemList = ({
                 <CheckIcon isActive={isSelected} />
               </OutlineButton>
 
-              <OutlineButton
-                variant="text"
-                onClick={() => {
-                  onDelete(cartItem.cartItemId);
-                }}
-              >
+              <OutlineButton variant="text" onClick={() => onDelete(cartItem.cartItemId)}>
                 <p
                   css={css`
                     font: var(--text-label);
@@ -90,11 +85,12 @@ const CartItemList = ({
               price={cartItem.product.price}
               quantity={cartItem.quantity}
               onChangeQuantity={(quantity) => onChangeQuantity(cartItem.cartItemId, quantity)}
-            ></CartItemRaw>
+            />
           </li>
         );
       })}
     </ul>
   );
 };
+
 export default CartItemList;
