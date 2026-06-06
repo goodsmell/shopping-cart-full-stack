@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import type { CartItem } from '../types';
+import type { CartItem, FetchCartItems } from '../types';
 
-const useCartItems = (fetchCartItems: () => Promise<CartItem[]>) => {
+const useCartItems = (fetchCartItems: FetchCartItems) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);

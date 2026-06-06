@@ -1,11 +1,11 @@
-import type { CartItem } from '../types';
+import type { CartItem, UpdateCartQuantity, DeleteCartItem } from '../types';
 
 type CartActionsParams = {
   cartItems: CartItem[];
   setCartItems: (updater: (prev: CartItem[]) => CartItem[]) => void;
   removeSelectItem: (id: string) => void;
-  updateQuantity: (cartItemId: string, quantity: number) => Promise<unknown>;
-  deleteItem: (cartItemId: string) => Promise<unknown>;
+  updateQuantity: UpdateCartQuantity;
+  deleteItem: DeleteCartItem;
 };
 
 const useCartActions = ({

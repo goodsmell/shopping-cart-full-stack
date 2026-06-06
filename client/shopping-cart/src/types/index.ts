@@ -11,3 +11,7 @@ export type CartItem = {
   quantity: number;
   product: Product;
 };
+
+export type FetchCartItems = () => Promise<CartItem[]>;
+export type UpdateCartQuantity = (cartItemId: string, quantity: number) => Promise<CartItem>;
+export type DeleteCartItem = (cartItemId: string) => Promise<unknown>;
