@@ -17,7 +17,6 @@ const OrderConfirm = () => {
     return <Navigate to="/" />;
   }
   const totalQuantity = state.selectedItems.reduce((acc, item) => acc + item.quantity, 0);
-  console.log(state);
 
   return (
     <>
