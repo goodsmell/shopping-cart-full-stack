@@ -20,6 +20,8 @@ const useCartItems = (fetchCartItems: FetchCartItems) => {
     };
 
     loadCartItems();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { cartItems, setCartItems, isLoading, isError };
