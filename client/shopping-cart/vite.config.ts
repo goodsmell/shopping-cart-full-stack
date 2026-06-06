@@ -23,6 +23,7 @@ type AppViteConfig = UserConfig & {
 
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 const config: AppViteConfig = {
+  base: '/shopping-cart-full-stack/',
   plugins: [react({ jsxImportSource: '@emotion/react' })],
   test: {
     projects: [{
