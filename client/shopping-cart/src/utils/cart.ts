@@ -2,6 +2,8 @@ import type { CartItem } from '../types';
 
 export const countCartItemTypes = (cartItems: CartItem[]) => cartItems.length;
 
+export const formatPrice = (price: number) => price.toLocaleString('ko-KR');
+
 export const calcOrderAmount = (cartItems: CartItem[], selectedIds: string[]) => {
   return cartItems
     .filter((item) => selectedIds.includes(item.cartItemId))

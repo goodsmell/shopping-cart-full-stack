@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { formatPrice } from '../../utils/cart';
 import QuantityControl from './QuantityControl';
 
 type Props = {
@@ -61,7 +62,7 @@ const CartItemRaw = ({ image, name, price, quantity, onChangeQuantity }: Props) 
               font: var(--text-heading);
             `}
           >
-            {price}원
+            {formatPrice(price)}원
           </p>
         </div>
 

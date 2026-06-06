@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { countCartItemTypes, calcOrderAmount, isFreeShipping } from './cart';
+import { countCartItemTypes, calcOrderAmount, formatPrice, isFreeShipping } from './cart';
 import type { CartItem } from '../types';
 
 const makeCartItem = (cartItemId: string): CartItem => ({
@@ -80,5 +80,15 @@ describe('countCartItemTypes', () => {
   it('담긴 상품 종류의 수를 반환한다', () => {
     const cartItems = [makeCartItem('1'), makeCartItem('2'), makeCartItem('3')];
     expect(countCartItemTypes(cartItems)).toBe(3);
+  });
+});
+
+describe('formatPrice', () => {
+  it('금액을 세 자리마다 콤마로 포맷한다', () => {
+    expect(formatPrice(168000)).toBe('168,000');
+  });
+
+  it('0원도 문자열로 포맷한다', () => {
+    expect(formatPrice(0)).toBe('0');
   });
 });

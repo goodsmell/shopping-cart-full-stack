@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import infoIcon from '../../assets/info_icon.svg';
+import { formatPrice } from '../../utils/cart';
 
 type Props = {
   purchasePrice: number;
@@ -58,7 +59,7 @@ const OrderSummary = ({ purchasePrice, shippingFee, totalPurchasePrice }: Props)
                 font: var(--text-heading);
               `}
             >
-              {purchasePrice}
+              {formatPrice(purchasePrice)}
             </p>
           </div>
 
@@ -84,7 +85,7 @@ const OrderSummary = ({ purchasePrice, shippingFee, totalPurchasePrice }: Props)
                 font: var(--text-heading);
               `}
             >
-              {shippingFee}
+              {formatPrice(shippingFee)}
             </p>
           </div>
         </section>
@@ -115,7 +116,7 @@ const OrderSummary = ({ purchasePrice, shippingFee, totalPurchasePrice }: Props)
                 font: var(--text-heading);
               `}
             >
-              {totalPurchasePrice}
+              {formatPrice(totalPurchasePrice)}
             </p>
           </div>
         </section>

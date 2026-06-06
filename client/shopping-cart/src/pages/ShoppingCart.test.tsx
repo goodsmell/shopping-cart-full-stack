@@ -48,7 +48,7 @@ describe('ShoppingCart', () => {
     renderShoppingCart();
     await waitFor(() => {
       // 10000*2 + 20000*1 + 32000*4 = 168000
-      const prices = screen.getAllByText('168000');
+      const prices = screen.getAllByText('168,000');
       expect(prices.length).toBeGreaterThanOrEqual(1);
     });
   });
@@ -65,7 +65,7 @@ describe('ShoppingCart', () => {
     renderShoppingCart();
     await waitFor(() => {
       // 168000 + 0 = 168000
-      const prices = screen.getAllByText('168000');
+      const prices = screen.getAllByText('168,000');
       expect(prices.length).toBeGreaterThanOrEqual(2);
     });
   });
@@ -76,7 +76,7 @@ describe('ShoppingCart', () => {
     await userEvent.click(checkboxes[1]);
     await waitFor(() => {
       // 20000*1 + 32000*4 = 148000
-      const prices = screen.getAllByText('148000');
+      const prices = screen.getAllByText('148,000');
       expect(prices.length).toBeGreaterThanOrEqual(1);
     });
   });

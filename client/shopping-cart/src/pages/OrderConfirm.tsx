@@ -4,6 +4,7 @@ import AppHeader from '../components/layout/AppHeader';
 import PrimaryButton from '../components/buttons/PrimaryButton';
 import backIcon from '../assets/back_icon.svg';
 import type { CartItem } from '../types';
+import { formatPrice } from '../utils/cart';
 type OrderConfirmState = {
   selectedItems: CartItem[];
   totalPurchasePrice: number;
@@ -77,7 +78,7 @@ const OrderConfirm = () => {
               font: var(--text-heading);
             `}
           >
-            {state.totalPurchasePrice}원
+            {formatPrice(state.totalPurchasePrice)}원
           </h2>
         </section>
       </div>
