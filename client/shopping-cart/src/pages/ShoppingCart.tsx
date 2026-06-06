@@ -2,18 +2,16 @@ import { css } from '@emotion/react';
 import { useNavigate } from 'react-router';
 import AppHeader from '../components/layout/AppHeader';
 import PrimaryButton from '../components/buttons/PrimaryButton';
-import updateCartQuantity from '../apis/updateCartQuantity';
+import { getCartList, updateCartQuantity, deleteCartItem } from '../apis/cartApi';
 import CartItemList from '../components/cart/CartItemList';
 import OutlineButton from '../components/buttons/OutlineButton';
 import infoIcon from '../assets/info_icon.svg';
 import { CheckIcon } from '../components/icons/CheckIcon';
 import { countCartItemTypes, calcOrderAmount, isFreeShipping } from '../utils/cart';
-import deleteCartItem from '../apis/deleteCartItem';
 import CartItemSkeleton from '../components/cart/CartItemSkeleton';
 import useCartItems from '../hooks/useCartItems';
 import useSelectItems from '../hooks/useSelectItems';
 import useCartActions from '../hooks/useCartActions';
-import getCartList from '../apis/getCartList';
 
 const ShoppingCart = () => {
   const navigate = useNavigate();
