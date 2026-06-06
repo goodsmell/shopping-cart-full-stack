@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import AppHeader from '../components/layout/AppHeader';
 import PrimaryButton from '../components/buttons/PrimaryButton';
@@ -12,35 +11,19 @@ import { countCartItemTypes, calcOrderAmount, isFreeShipping } from '../utils/ca
 import deleteCartItem from '../apis/deleteCartItem';
 import CartItemSkeleton from '../components/cart/CartItemSkeleton';
 import useCartItems from '../hooks/useCartItems';
-
+import useSelectItems from '../hooks/useSelectItems';
 //TODO : 에러, 스켈레톤, hook분리, 상태관리 개선, DI 고려, 응집도 결합도 고려
 
 const ShoppingCart = () => {
   const navigate = useNavigate();
-
   const { cartItems, setCartItems, isLoading, isError } = useCartItems();
-  const [selectItems, setSelectItems] = useState<string[]>([]);
-  const [isAllSelect, setIsAllSelect] = useState<boolean>(false);
-
+  const { selectItems, isAllSelect, handleToggleSelect, handleSelectAll, removeSelectItem } =
+    useSelectItems(cartItems);
+    
   const purchasePrice = calcOrderAmount(cartItems, selectItems);
   const shippingFee = isFreeShipping(purchasePrice) && selectItems.length >= 1 ? 3000 : 0;
   const totalPurchasePrice = purchasePrice + shippingFee;
 
-  const handleToggleSelect = (id: string) => {
-    setSelectItems((prev) =>
-      prev.includes(id) ? prev.filter((itemId) => itemId !== id) : [...prev, id],
-    );
-  };
-
-  const handleSelectAll = () => {
-    if (selectItems.length === cartItems.length) {
-      setSelectItems([]);
-      setIsAllSelect(false);
-    } else {
-      setSelectItems(cartItems.map((item) => item.cartItemId));
-      setIsAllSelect(true);
-    }
-  };
   const handleQuantityChange = async (cartItemId: string, quantity: number) => {
     try {
       await updateCartQuantity(cartItemId, quantity);
@@ -58,7 +41,7 @@ const ShoppingCart = () => {
     try {
       await deleteCartItem(cartItemId);
       setCartItems((prev) => prev.filter((item) => item.cartItemId !== cartItemId));
-      setSelectItems((prev) => prev.filter((id) => id !== cartItemId));
+      removeSelectItem(cartItemId);
     } catch (error) {
       console.log(error);
       alert(`${itemName} 삭제에 실패했습니다.`);
