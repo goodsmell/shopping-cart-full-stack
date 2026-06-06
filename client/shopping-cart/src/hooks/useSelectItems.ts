@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import type { CartItem } from '../types';
 import useLocalStorage from './useLocalStorage';
 
@@ -7,7 +7,7 @@ const useSelectItems = (cartItems: CartItem[]) => {
   const [selectItems, setSelectItems] = useLocalStorage<string[]>('selectItems', []);
   const isAllSelect = cartItems.length > 0 && selectItems.length === cartItems.length;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (isFirstVisit && cartItems.length > 0) {
       setSelectItems(cartItems.map((item) => item.cartItemId));
     }
