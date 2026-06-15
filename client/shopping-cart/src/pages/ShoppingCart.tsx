@@ -10,6 +10,7 @@ import useCartActions from '../hooks/useCartActions';
 import useCartItems from '../hooks/useCartItems';
 import useSelectItems from '../hooks/useSelectItems';
 import { countCartItemTypes, calcOrderAmount, isFreeShipping } from '../utils/cart';
+import SectionHeader from '../components/SectionHeader';
 
 const ShoppingCart = () => {
   const navigate = useNavigate();
@@ -50,24 +51,11 @@ const ShoppingCart = () => {
           overflow-y: auto;
         `}
       >
-        <section
-          css={css`
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-          `}
-        >
-          <h2
-            css={css`
-              font: var(--text-heading);
-            `}
-          >
-            장바구니
-          </h2>
+        <SectionHeader title="장바구니">
           {cartItems.length !== 0 && (
             <p>현재 {countCartItemTypes(cartItems)} 종류의 상품이 담겨있습니다.</p>
           )}
-        </section>
+        </SectionHeader>
 
         <CartContent cartItems={cartItems} isLoading={isLoading} isError={isError}>
           <CartSection
