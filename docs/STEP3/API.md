@@ -4,6 +4,10 @@
 
 ## 목차
 
+- [상품 (Product)](#상품-product)
+  - [상품 목록 조회](#1-상품-목록-조회)
+  - [상품 추가](#2-상품-추가)
+  - [상품 삭제](#3-상품-삭제)
 - [장바구니 (Cart)](#장바구니-cart)
   - [장바구니 상품 조회](#1-장바구니-상품-조회)
   - [장바구니 결제 정보 조회](#2-장바구니-결제-정보-조회)
@@ -19,6 +23,177 @@
 - [쿠폰 (Coupon)](#쿠폰-coupon)
   - [쿠폰 정보 조회](#1-쿠폰-정보-조회)
   - [쿠폰 적용](#2-쿠폰-적용)
+
+---
+
+## 상품 (Product)
+
+### 엔드포인트 요약
+
+| Method | Endpoint | 설명 |
+| --- | --- | --- |
+| `GET` | `/products` | 상품 목록 조회 |
+| `POST` | `/products` | 상품 추가 |
+| `DELETE` | `/products/:productId` | 상품 삭제 |
+
+---
+
+### 1. 상품 목록 조회
+
+```
+GET /products
+```
+
+| 구분 | 내용 |
+| --- | --- |
+| Path Params | - |
+| Query Params | - |
+| Request Body | - |
+
+**`200 OK`**
+
+```jsonc
+{
+  "status": 200,
+  "data": {
+    "products": [
+      {
+        "productId": "string",
+        "name": "string",
+        "price": "number",
+        "image": "string",
+        "stock": "number"
+      }
+    ]
+  }
+}
+```
+
+> 상품 목록이 비어있는 경우에도 `200 OK`와 빈 배열을 반환한다.
+
+---
+
+### 2. 상품 추가
+
+```
+POST /products
+```
+
+| 구분 | 내용 |
+| --- | --- |
+| Path Params | - |
+| Query Params | - |
+| Request Body | `{ name: string; price: number; image: string; stock: number }` |
+
+**`201 Created`**
+
+```jsonc
+{
+  "status": 201,
+  "data": {
+    "productId": "string",
+    "name": "string",
+    "price": "number",
+    "image": "string",
+    "stock": "number"
+  }
+}
+```
+
+**`400 Bad Request`** — 필수 필드가 누락된 경우
+
+```jsonc
+{
+  "status": 400,
+  "errorCode": "MISSING_FIELD",
+  "errorMessage": "string",
+  "data": [
+    { "type": "name", "errorCode": "REQUIRED" }
+  ]
+}
+```
+
+**`400 Bad Request`** — 필드 값이 도메인 유효성 조건을 벗어난 경우 (예: `price` ≤ 0, `stock` 범위 초과 등)
+
+```jsonc
+{
+  "status": 400,
+  "errorCode": "INVALID",
+  "errorMessage": "string",
+  "data": [
+    { "type": "price", "errorCode": "string" }
+  ]
+}
+```
+
+**`400 Bad Request`** — 필드 타입이 불일치하는 경우
+
+```jsonc
+{
+  "status": 400,
+  "errorCode": "TYPE_MISSMATCH",
+  "errorMessage": "string"
+}
+```
+
+**`400 Bad Request`** — 요청 body가 json 형태가 아닌 경우 *(request body가 필요한 모든 요청에서 검증)*
+
+```jsonc
+{
+  "status": 400,
+  "errorCode": "NO_JSON",
+  "errorMessage": "string"
+}
+```
+
+> 응답 예시는 단일 필드가 실패한 경우를 나타낸다. 실제 응답에는 실패한 필드가 모두 `data` 배열에 포함된다.
+
+---
+
+### 3. 상품 삭제
+
+```
+DELETE /products/:productId
+```
+
+| 구분 | 내용 |
+| --- | --- |
+| Path Params | `{ productId: string }` |
+| Query Params | - |
+| Request Body | - |
+
+**`200 OK`** — 정상적으로 productId를 받은 경우
+
+```jsonc
+{
+  "status": 200,
+  "data": {
+    "productId": "string"
+  }
+}
+```
+
+> 삭제된 `productId`를 반환한다. 클라이언트에서 캐시 무효화나 UI 업데이트 등에 활용할 수 있다.
+
+**`404 Not Found`** — productId가 누락된 경우
+
+```jsonc
+{
+  "status": 404,
+  "errorCode": "RESOURCE_NOT_FOUND",
+  "errorMessage": "string"
+}
+```
+
+**`404 Not Found`** — 존재하지 않는 productId로 조회하는 경우
+
+```jsonc
+{
+  "status": 404,
+  "errorCode": "ROUTE_NOT_FOUND",
+  "errorMessage": "string"
+}
+```
 
 ---
 
