@@ -5,14 +5,14 @@ import PrimaryButton from '../components/buttons/PrimaryButton';
 import backIcon from '../assets/back_icon.svg';
 import type { CartItem } from '../types';
 import { formatPrice } from '../utils/cart';
-type OrderConfirmState = {
+type PaymentConfirmState = {
   selectedItems: CartItem[];
   totalPurchasePrice: number;
 };
 
-const OrderConfirm = () => {
+const PaymentConfirm = () => {
   const navigate = useNavigate();
-  const { state } = useLocation() as { state: OrderConfirmState | null };
+  const { state } = useLocation() as { state: PaymentConfirmState | null };
 
   if (!state?.selectedItems || state?.selectedItems.length < 1) {
     return <Navigate to="/" />;
@@ -46,7 +46,7 @@ const OrderConfirm = () => {
             font: var(--text-heading);
           `}
         >
-          주문 확인
+          결제 확인
         </h2>
         <p
           css={css`
@@ -87,4 +87,4 @@ const OrderConfirm = () => {
   );
 };
 
-export default OrderConfirm;
+export default PaymentConfirm;
