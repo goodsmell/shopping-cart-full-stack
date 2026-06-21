@@ -1,0 +1,150 @@
+import { css } from '@emotion/react';
+import ModalLayout from '../common/Modal';
+import InfoNotice from '../common/InfoNotice';
+import OutlineButton from '../buttons/OutlineButton';
+import { CheckIcon } from '../icons/CheckIcon';
+import { formatCouponDescription } from '../../utils/coupon';
+import { formatPrice } from '../../utils/cart';
+import type { CouponInfo } from '../../types';
+
+type Props = {
+  isModalOpen: boolean;
+  info?: CouponInfo;
+  selectedIds: string[];
+  discountAmount: number;
+  onOpen: () => void;
+  onClose: () => void;
+  onToggle: (couponId: string) => void;
+  onApply: () => void;
+};
+
+const CouponSection = ({
+  isModalOpen,
+  info,
+  selectedIds,
+  discountAmount,
+  onOpen,
+  onClose,
+  onToggle,
+  onApply,
+}: Props) => {
+  return (
+    <>
+      <button
+        css={css`
+          width: 100%;
+          height: 48px;
+          flex-shrink: 0;
+          justify-content: center;
+          align-items: center;
+          border-radius: 5px;
+          border: 1px solid #33333340;
+          background: none;
+
+          cursor: pointer;
+        `}
+        onClick={onOpen}
+      >
+        <p
+          css={css`
+            font: var(--text-button);
+            color: #333333bf;
+          `}
+        >
+          쿠폰 적용
+        </p>
+      </button>
+
+      <ModalLayout isOpen={isModalOpen} onClose={onClose} title="쿠폰을 선택해 주세요">
+        <InfoNotice text="쿠폰은 최대 2개까지 사용할 수 있습니다." />
+
+        <ul
+          css={css`
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+            gap: 12px;
+            margin: 12px 0 0;
+            padding: 0;
+            list-style: none;
+            overflow-y: auto;
+          `}
+        >
+          {info?.coupons.map((coupon) => {
+            const isSelected = selectedIds.includes(coupon.couponId);
+
+            return (
+              <li
+                key={coupon.couponId}
+                css={css`
+                  display: flex;
+                  gap: 8px;
+                  align-items: center;
+                  padding: 12px 0;
+                  border-top: 1px solid var(--color-line);
+                `}
+              >
+                <OutlineButton
+                  isActive={isSelected}
+                  disabled={coupon.disabled}
+                  onClick={() => onToggle(coupon.couponId)}
+                >
+                  <CheckIcon isActive={isSelected} />
+                </OutlineButton>
+                <div>
+                  <p
+                    css={css`
+                      font: var(--text-subheading);
+                      color: ${coupon.disabled ? '#33333366' : 'inherit'};
+                    `}
+                  >
+                    {coupon.couponTitle}
+                  </p>
+                  {coupon.description.map((desc) => (
+                    <p
+                      key={desc.type}
+                      css={css`
+                        font: var(--text-label);
+                        color: ${coupon.disabled ? '#33333366' : 'inherit'};
+                      `}
+                    >
+                      {formatCouponDescription(desc)}
+                    </p>
+                  ))}
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+
+        <button
+          css={css`
+            width: 100%;
+            height: 44px;
+            flex-shrink: 0;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+
+            background: #333333;
+
+            cursor: pointer;
+          `}
+          onClick={onApply}
+        >
+          <p
+            css={css`
+              font: var(--text-button);
+              color: #ffffff;
+            `}
+          >
+            총 {formatPrice(discountAmount)}원 할인 쿠폰 사용하기
+          </p>
+        </button>
+      </ModalLayout>
+    </>
+  );
+};
+
+export default CouponSection;
