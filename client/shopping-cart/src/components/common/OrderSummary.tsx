@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import infoIcon from '../../assets/info_icon.svg';
+import InfoNotice from './InfoNotice';
 import { formatPrice } from '../../utils/cart';
 import type { PayInfo } from '../../types';
 
@@ -10,23 +10,7 @@ type Props = {
 const OrderSummary = ({ data }: Props) => {
   return (
     <section>
-      <span
-        css={css`
-          display: flex;
-          flex-direction: row;
-          gap: 4px;
-          align-items: center;
-        `}
-      >
-        <img src={infoIcon} />
-        <p
-          css={css`
-            font: var(--text-label);
-          `}
-        >
-          총 주문 금액이 100,000원 이상일 경우 무료 배송됩니다.
-        </p>
-      </span>
+      <InfoNotice text="총 주문 금액이 100,000원 이상일 경우 무료 배송됩니다." />
 
       <div>
         <section
