@@ -5,6 +5,7 @@ import PrimaryButton from '../components/buttons/PrimaryButton';
 import backIcon from '../assets/back_icon.svg';
 import type { CartItem } from '../types';
 import { formatPrice } from '../utils/cart';
+
 type PaymentConfirmState = {
   selectedItems: CartItem[];
   totalPurchasePrice: number;
