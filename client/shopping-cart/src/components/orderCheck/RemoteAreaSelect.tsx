@@ -9,7 +9,13 @@ type Props = {
 
 const RemoteAreaSelect = ({ isSelected, onToggle }: Props) => {
   return (
-    <section>
+    <section
+      css={css`
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      `}
+    >
       <p
         css={css`
           font: var(--text-subheading);
@@ -21,6 +27,7 @@ const RemoteAreaSelect = ({ isSelected, onToggle }: Props) => {
       <div
         css={css`
           display: flex;
+          align-items: center;
           gap: 8px;
         `}
       >
