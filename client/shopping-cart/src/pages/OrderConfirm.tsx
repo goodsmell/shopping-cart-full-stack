@@ -6,14 +6,19 @@ import OrderSummary from '../components/common/OrderSummary';
 import { useNavigate } from 'react-router';
 import backIcon from '../assets/back_icon.svg';
 import SectionHeader from '../components/common/SectionHeader';
-import { createOrderCheck, getOrderCheck } from '../apis/orderCheckApi';
-import type { OrderCheck } from '../types';
+import { createOrderCheck, getOrderCheck, selectRemoteArea } from '../apis/orderCheckApi';
+import { getCoupons, calculateCouponDiscount, applyCoupons } from '../apis/couponApi';
+import type { CouponInfo, OrderCheck } from '../types';
 import OrderCheckItemList from '../components/orderCheck/OrderCheckItemList';
 import ProductRawSkeleton from '../components/common/ProductRawSkeleton';
 import OutlineButton from '../components/buttons/OutlineButton';
 import { CheckIcon } from '../components/icons/CheckIcon';
 import ModalLayout from '../components/common/Modal';
 import InfoNotice from '../components/common/InfoNotice';
+import { formatCouponDescription } from '../utils/coupon';
+import { formatPrice } from '../utils/cart';
+
+const MAX_SELECTED_COUPON_COUNT = 2;
 
 const OrderConfirm = () => {
   const navigate = useNavigate();
@@ -22,6 +27,10 @@ const OrderConfirm = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
+  const [couponInfo, setCouponInfo] = useState<CouponInfo>();
+  const [selectedCouponIds, setSelectedCouponIds] = useState<string[]>([]);
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [isRemoteAreaSelected, setIsRemoteAreaSelected] = useState(false);
 
   useEffect(() => {
     const loadOrderCheck = async () => {
@@ -39,6 +48,59 @@ const OrderConfirm = () => {
 
     loadOrderCheck();
   }, []);
+
+  useEffect(() => {
+    if (!isCouponModalOpen) return;
+
+    const loadCoupons = async () => {
+      try {
+        const data = await getCoupons();
+        setCouponInfo(data);
+        setSelectedCouponIds(data.selectedCoupons);
+        setDiscountAmount(await calculateCouponDiscount(data.selectedCoupons));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    loadCoupons();
+  }, [isCouponModalOpen]);
+
+  const handleToggleCoupon = async (couponId: string) => {
+    const isSelected = selectedCouponIds.includes(couponId);
+    if (!isSelected && selectedCouponIds.length >= MAX_SELECTED_COUPON_COUNT) return;
+
+    const nextSelectedCouponIds = isSelected
+      ? selectedCouponIds.filter((id) => id !== couponId)
+      : [...selectedCouponIds, couponId];
+
+    setSelectedCouponIds(nextSelectedCouponIds);
+
+    try {
+      setDiscountAmount(await calculateCouponDiscount(nextSelectedCouponIds));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleApplyCoupons = async () => {
+    try {
+      await applyCoupons(selectedCouponIds);
+      setIsCouponModalOpen(false);
+      setOrder(await getOrderCheck());
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleToggleRemoteArea = async () => {
+    try {
+      setIsRemoteAreaSelected(await selectRemoteArea(!isRemoteAreaSelected));
+      setOrder(await getOrderCheck());
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -129,9 +191,90 @@ const OrderConfirm = () => {
         >
           <InfoNotice text="쿠폰은 최대 2개까지 사용할 수 있습니다." />
 
-          <ul>
-            <li></li>
+          <ul
+            css={css`
+              display: flex;
+              flex-direction: column;
+              flex: 1;
+              min-height: 0;
+              gap: 12px;
+              margin: 12px 0 0;
+              padding: 0;
+              list-style: none;
+              overflow-y: auto;
+            `}
+          >
+            {couponInfo?.coupons.map((coupon) => {
+              const isSelected = selectedCouponIds.includes(coupon.couponId);
+
+              return (
+                <li
+                  key={coupon.couponId}
+                  css={css`
+                    display: flex;
+                    gap: 8px;
+                    align-items: center;
+                    padding: 12px 0;
+                    border-top: 1px solid var(--color-line);
+                  `}
+                >
+                  <OutlineButton
+                    isActive={isSelected}
+                    disabled={coupon.disabled}
+                    onClick={() => handleToggleCoupon(coupon.couponId)}
+                  >
+                    <CheckIcon isActive={isSelected} />
+                  </OutlineButton>
+                  <div>
+                    <p
+                      css={css`
+                        font: var(--text-subheading);
+                        color: ${coupon.disabled ? '#33333366' : 'inherit'};
+                      `}
+                    >
+                      {coupon.couponTitle}
+                    </p>
+                    {coupon.description.map((desc) => (
+                      <p
+                        key={desc.type}
+                        css={css`
+                          font: var(--text-label);
+                          color: ${coupon.disabled ? '#33333366' : 'inherit'};
+                        `}
+                      >
+                        {formatCouponDescription(desc)}
+                      </p>
+                    ))}
+                  </div>
+                </li>
+              );
+            })}
           </ul>
+
+          <button
+            css={css`
+              width: 100%;
+              height: 44px;
+              flex-shrink: 0;
+              justify-content: center;
+              align-items: center;
+              border-radius: 5px;
+
+              background: #333333;
+
+              cursor: pointer;
+            `}
+            onClick={handleApplyCoupons}
+          >
+            <p
+              css={css`
+                font: var(--text-button);
+                color: #ffffff;
+              `}
+            >
+              총 {formatPrice(discountAmount)}원 할인 쿠폰 사용하기
+            </p>
+          </button>
         </ModalLayout>
         {/* 배송정보 */}
         <section>
@@ -149,8 +292,8 @@ const OrderConfirm = () => {
               gap: 8px;
             `}
           >
-            <OutlineButton isActive={() => {}} onClick={() => {}}>
-              <CheckIcon isActive={true} />
+            <OutlineButton isActive={isRemoteAreaSelected} onClick={handleToggleRemoteArea}>
+              <CheckIcon isActive={isRemoteAreaSelected} />
             </OutlineButton>
             <p
               css={css`

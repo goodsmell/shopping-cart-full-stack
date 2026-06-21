@@ -38,11 +38,13 @@ const ModalLayout = ({ isOpen, onClose, title, children }: Props) => {
     >
       <div
         css={css`
+          display: flex;
+          flex-direction: column;
           width: 100%;
           max-width: 382px;
           max-height: 70vh;
-          overflow-y: auto;
           margin: 0 24px;
+          padding: 24px;
           border-radius: 12px;
           background: var(--color-white);
         `}
@@ -53,6 +55,7 @@ const ModalLayout = ({ isOpen, onClose, title, children }: Props) => {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-shrink: 0;
             margin-bottom: 16px;
           `}
         >
@@ -78,7 +81,16 @@ const ModalLayout = ({ isOpen, onClose, title, children }: Props) => {
           </button>
         </div>
 
-        {children}
+        <div
+          css={css`
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+          `}
+        >
+          {children}
+        </div>
       </div>
     </div>
   );
