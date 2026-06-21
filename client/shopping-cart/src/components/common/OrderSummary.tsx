@@ -4,7 +4,7 @@ import { formatPrice } from '../../utils/cart';
 import type { PayInfo } from '../../types';
 
 type Props = {
-  data: PayInfo;
+  data: Omit<PayInfo, 'couponDiscountAmount'>;
 };
 
 const OrderSummary = ({ data }: Props) => {

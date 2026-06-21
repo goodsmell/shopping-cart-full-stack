@@ -233,12 +233,13 @@ export const handlers = [
         imgUrl: item.product.imgUrl,
         quantity: item.quantity,
       })),
+      payInfo: { ...calcPayInfo(items), couponDiscountAmount: 0 },
     });
   }),
 
   http.get(`${BASE_URL}/order-check/pay-info`, () => {
     if (!orderCheckItems) return fail(404, 'RESOURCE_NOT_FOUND', '생성된 주문이 없습니다.');
-    return success(calcPayInfo(orderCheckItems));
+    return success({ ...calcPayInfo(orderCheckItems), couponDiscountAmount: 0 });
   }),
 
   http.patch(`${BASE_URL}/order-check/select/remote-areas`, async ({ request }) => {

@@ -1,16 +1,15 @@
 import { css } from '@emotion/react';
 import { formatPrice } from '../../utils/cart';
-import QuantityControl from './QuantityControl';
+import type { ReactNode } from 'react';
 
 type Props = {
   image: string;
   name: string;
   price: number;
-  quantity: number;
-  onChangeQuantity: (quantity: number) => void;
+  children: ReactNode;
 };
 
-const CartItemRaw = ({ image, name, price, quantity, onChangeQuantity }: Props) => {
+const ProductRaw = ({ image, name, price, children }: Props) => {
   return (
     <div
       css={css`
@@ -66,13 +65,9 @@ const CartItemRaw = ({ image, name, price, quantity, onChangeQuantity }: Props) 
           </p>
         </div>
 
-        <QuantityControl
-          quantity={quantity}
-          onDecrease={() => onChangeQuantity(quantity - 1)}
-          onIncrease={() => onChangeQuantity(quantity + 1)}
-        />
+        {children}
       </div>
     </div>
   );
 };
-export default CartItemRaw;
+export default ProductRaw;

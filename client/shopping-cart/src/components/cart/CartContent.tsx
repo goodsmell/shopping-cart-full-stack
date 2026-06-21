@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import type { ReactNode } from 'react';
 import type { CartItem } from '../../types';
-import CartItemSkeleton from './CartItemSkeleton';
+import ProductRawSkeleton from '../common/ProductRawSkeleton';
 
 type Props = {
   children: ReactNode;
@@ -38,7 +38,7 @@ const CartContent = ({ children, cartItems, isLoading, isError }: Props) => {
         `}
       >
         {Array.from({ length: 3 }).map((_, i) => (
-          <CartItemSkeleton key={i} />
+          <ProductRawSkeleton key={i} />
         ))}
       </ul>
     );

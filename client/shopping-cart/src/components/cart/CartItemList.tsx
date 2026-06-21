@@ -2,8 +2,8 @@ import { css } from '@emotion/react';
 import type { CartItem } from '../../types';
 import OutlineButton from '../buttons/OutlineButton';
 import { CheckIcon } from '../icons/CheckIcon';
-import CartItemRaw from './CartItemRaw';
-
+import ProductRaw from '../common/ProductRaw';
+import QuantityControl from './QuantityControl';
 type Props = {
   cartItems: CartItem[];
   handleSelect: (id: string) => void;
@@ -70,13 +70,17 @@ const CartItemList = ({ cartItems, handleSelect, onChangeQuantity, onDelete }: P
               </OutlineButton>
             </div>
 
-            <CartItemRaw
+            <ProductRaw
               image={cartItem.product.imgUrl}
               name={cartItem.product.name}
               price={cartItem.product.price}
-              quantity={cartItem.quantity}
-              onChangeQuantity={(quantity) => onChangeQuantity(cartItem.product.id, quantity)}
-            />
+            >
+              <QuantityControl
+                quantity={cartItem.quantity}
+                onDecrease={() => onChangeQuantity(cartItem.product.id, cartItem.quantity - 1)}
+                onIncrease={() => onChangeQuantity(cartItem.product.id, cartItem.quantity + 1)}
+              />
+            </ProductRaw>
           </li>
         );
       })}

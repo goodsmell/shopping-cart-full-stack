@@ -14,7 +14,7 @@ const skeletonStyle = (width: string, height: string) => css`
   animation: ${shimmer} 1.2s infinite linear;
 `;
 
-const CartItemSkeleton = () => {
+const ProductRawSkeleton = () => {
   return (
     <li
       css={css`
@@ -67,4 +67,4 @@ const CartItemSkeleton = () => {
   );
 };
 
-export default CartItemSkeleton;
+export default ProductRawSkeleton;

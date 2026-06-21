@@ -14,12 +14,20 @@ export type CartItem = {
 export type PayInfo = {
   orderPrice: number;
   deliveryFee: number;
+  couponDiscountAmount: number;
   totalOrderAmount: number;
 };
 
 export type Cart = {
   isAllSelected: boolean;
   cartItems: CartItem[];
+  payInfo: Omit<PayInfo, 'couponDiscountAmount'>;
+};
+
+export type OrderCheckProduct = Product & { quantity: number };
+
+export type OrderCheck = {
+  products: OrderCheckProduct[];
   payInfo: PayInfo;
 };
 

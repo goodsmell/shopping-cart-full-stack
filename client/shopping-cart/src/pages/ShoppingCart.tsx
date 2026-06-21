@@ -5,11 +5,11 @@ import { deleteCartItem, getCart, updateCartQuantity, updateCartSelectAll } from
 import PrimaryButton from '../components/buttons/PrimaryButton';
 import CartContent from '../components/cart/CartContent';
 import CartSection from '../components/cart/CartSection';
-import OrderSummary from '../components/cart/OrderSummary';
+import OrderSummary from '../components/common/OrderSummary';
 import AppHeader from '../components/layout/AppHeader';
 import useCart from '../hooks/useCart';
 import { countCartItemTypes } from '../utils/cart';
-import SectionHeader from '../components/SectionHeader';
+import SectionHeader from '../components/common/SectionHeader';
 
 const ShoppingCart = () => {
   const navigate = useNavigate();
