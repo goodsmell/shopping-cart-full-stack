@@ -5,6 +5,7 @@ import { deleteCartItem, getCart, updateCartQuantity, updateCartSelectAll } from
 import PrimaryButton from '../components/buttons/PrimaryButton';
 import CartBody from '../components/cart/CartBody';
 import ProductRawSkeleton from '../components/common/ProductRawSkeleton';
+import AsyncContent from '../components/common/AsyncContent';
 import AppHeader from '../components/layout/AppHeader';
 import useCart from '../hooks/useCart';
 
@@ -70,26 +71,28 @@ const ShoppingCart = () => {
           overflow-y: auto;
         `}
       >
-        {isLoading ? (
-          <ul
-            css={css`
-              list-style: none;
-              margin: 0;
-              padding: 0;
-            `}
-          >
-            {Array.from({ length: 3 }).map((_, i) => (
-              <ProductRawSkeleton key={i} />
-            ))}
-          </ul>
-        ) : isError ? (
-          <p>장바구니를 불러오는 데 실패했습니다.</p>
-        ) : (
-          cart &&
-          (cart.cartItems.length === 0 ? (
-            <p>장바구니에 담은 상품이 없습니다.</p>
-          ) : (
-            <>
+        <AsyncContent
+          isLoading={isLoading}
+          isError={isError}
+          loadingFallback={
+            <ul
+              css={css`
+                list-style: none;
+                margin: 0;
+                padding: 0;
+              `}
+            >
+              {Array.from({ length: 3 }).map((_, i) => (
+                <ProductRawSkeleton key={i} />
+              ))}
+            </ul>
+          }
+          errorFallback={<p>장바구니를 불러오는 데 실패했습니다.</p>}
+        >
+          {cart &&
+            (cart.cartItems.length === 0 ? (
+              <p>장바구니에 담은 상품이 없습니다.</p>
+            ) : (
               <CartBody
                 cart={cart}
                 onSelect={handleSelect}
@@ -97,9 +100,8 @@ const ShoppingCart = () => {
                 onDelete={handleDelete}
                 onChangeQuantity={handleQuantity}
               />
-            </>
-          ))
-        )}
+            ))}
+        </AsyncContent>
       </main>
 
       <PrimaryButton

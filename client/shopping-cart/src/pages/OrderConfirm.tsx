@@ -8,6 +8,7 @@ import { createOrderCheck, getOrderCheck, selectRemoteArea } from '../apis/order
 import { getCoupons, calculateCouponDiscount, applyCoupons } from '../apis/couponApi';
 import type { CouponInfo, OrderCheck } from '../types';
 import ProductRawSkeleton from '../components/common/ProductRawSkeleton';
+import AsyncContent from '../components/common/AsyncContent';
 import OrderConfirmBody from '../components/orderCheck/OrderConfirmBody';
 import CouponSection from '../components/orderCheck/CouponSection';
 import RemoteAreaSelect from '../components/orderCheck/RemoteAreaSelect';
@@ -120,22 +121,25 @@ const OrderConfirm = () => {
           overflow-y: auto;
         `}
       >
-        {isLoading ? (
-          <ul
-            css={css`
-              list-style: none;
-              margin: 0;
-              padding: 0;
-            `}
-          >
-            {Array.from({ length: 3 }).map((_, i) => (
-              <ProductRawSkeleton key={i} />
-            ))}
-          </ul>
-        ) : isError ? (
-          <p>주문 확인 정보를 불러오는 데 실패했습니다.</p>
-        ) : (
-          order && (
+        <AsyncContent
+          isLoading={isLoading}
+          isError={isError}
+          loadingFallback={
+            <ul
+              css={css`
+                list-style: none;
+                margin: 0;
+                padding: 0;
+              `}
+            >
+              {Array.from({ length: 3 }).map((_, i) => (
+                <ProductRawSkeleton key={i} />
+              ))}
+            </ul>
+          }
+          errorFallback={<p>주문 확인 정보를 불러오는 데 실패했습니다.</p>}
+        >
+          {order && (
             <OrderConfirmBody
               order={order}
               couponSection={
@@ -157,8 +161,8 @@ const OrderConfirm = () => {
                 />
               }
             />
-          )
-        )}
+          )}
+        </AsyncContent>
       </main>
 
       <PrimaryButton
