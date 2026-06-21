@@ -2,7 +2,6 @@ import CartSection from './CartSection';
 import OrderSummary from '../common/OrderSummary';
 import type { Cart } from '../../types';
 import SectionHeader from '../common/SectionHeader';
-import { countCartItemTypes } from '../../utils/cart';
 
 type Props = {
   cart: Cart;
@@ -16,7 +15,7 @@ const CartBody = ({ cart, onSelect, onSelectAll, onDelete, onChangeQuantity }: P
   return (
     <>
       <SectionHeader title="장바구니">
-        <p>현재 {countCartItemTypes(cart.cartItems)} 종류의 상품이 담겨있습니다.</p>
+        <p>현재 {cart.cartItems.length} 종류의 상품이 담겨있습니다.</p>
       </SectionHeader>
 
       <CartSection

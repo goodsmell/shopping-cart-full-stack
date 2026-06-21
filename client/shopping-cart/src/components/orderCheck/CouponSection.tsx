@@ -4,7 +4,7 @@ import InfoNotice from '../common/InfoNotice';
 import OutlineButton from '../buttons/OutlineButton';
 import { CheckIcon } from '../icons/CheckIcon';
 import { formatCouponDescription } from '../../utils/coupon';
-import { formatPrice } from '../../utils/cart';
+import { formatPrice } from '../../utils/price';
 import type { CouponInfo } from '../../types';
 
 type Props = {

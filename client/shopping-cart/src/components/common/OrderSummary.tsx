@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import InfoNotice from './InfoNotice';
-import { formatPrice } from '../../utils/cart';
+import { formatPrice } from '../../utils/price';
 import type { PayInfo } from '../../types';
 
 type Props = {

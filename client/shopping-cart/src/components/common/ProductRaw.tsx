@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { formatPrice } from '../../utils/cart';
+import { formatPrice } from '../../utils/price';
 import type { ReactNode } from 'react';
 
 type Props = {

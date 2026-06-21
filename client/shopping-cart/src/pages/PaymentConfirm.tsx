@@ -4,7 +4,7 @@ import AppHeader from '../components/layout/AppHeader';
 import PrimaryButton from '../components/buttons/PrimaryButton';
 import backIcon from '../assets/back_icon.svg';
 import type { OrderCheckProduct } from '../types';
-import { formatPrice } from '../utils/cart';
+import { formatPrice } from '../utils/price';
 
 type PaymentConfirmState = {
   selectedItems: OrderCheckProduct[];
