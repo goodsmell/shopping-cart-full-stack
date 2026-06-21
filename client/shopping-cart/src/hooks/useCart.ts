@@ -7,7 +7,7 @@ const useCart = (fetchCart: FetchCart) => {
   const [isError, setIsError] = useState(false);
 
   useEffect(() => {
-    const loadCartItems = async () => {
+    const loadCartInfo = async () => {
       try {
         const data = await fetchCart();
         setCart(data);
@@ -19,7 +19,7 @@ const useCart = (fetchCart: FetchCart) => {
       }
     };
 
-    loadCartItems();
+    loadCartInfo();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
