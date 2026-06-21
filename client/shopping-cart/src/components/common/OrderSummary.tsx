@@ -12,13 +12,18 @@ const OrderSummary = ({ data }: Props) => {
     <section>
       <InfoNotice text="총 주문 금액이 100,000원 이상일 경우 무료 배송됩니다." />
 
-      <div>
+      <div
+        css={css`
+          margin-top: 13px;
+        `}
+      >
         <section
           css={css`
             display: flex;
             flex-direction: column;
             gap: 8px;
             border-top: 1px solid var(--color-line);
+            padding: 12px 0;
           `}
         >
           <div
@@ -102,6 +107,7 @@ const OrderSummary = ({ data }: Props) => {
 
         <section
           css={css`
+            padding: 12px 0;
             border-top: 1px solid var(--color-line);
           `}
         >
