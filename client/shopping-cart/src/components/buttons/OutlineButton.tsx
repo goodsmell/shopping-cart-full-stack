@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 type Variant = 'icon' | 'text';
 
 type Props = {
-  onClick: () => void;
+  onClick?: () => void;
   children: ReactNode;
   isActive?: boolean;
   variant?: Variant;
@@ -52,7 +52,15 @@ const OutlineButton = ({ onClick, children, isActive, variant = 'icon', disabled
       type="button"
       aria-pressed={isActive}
       disabled={disabled}
-      css={[baseStyle(isPressed), variantStyles[variant], disabled && css`cursor: not-allowed; opacity: 0.4;`]}
+      css={[
+        baseStyle(isPressed),
+        variantStyles[variant],
+        disabled &&
+          css`
+            cursor: not-allowed;
+            opacity: 0.4;
+          `,
+      ]}
       onClick={onClick}
     >
       {children}

@@ -1,17 +1,28 @@
 export type Product = {
-  productId: string;
+  id: string;
   name: string;
   price: number;
-  image: string;
-  stock: number;
+  imgUrl: string;
 };
 
 export type CartItem = {
-  cartItemId: string;
-  quantity: number;
   product: Product;
+  quantity: number;
+  checkStatus: boolean;
 };
 
-export type FetchCartItems = () => Promise<CartItem[]>;
-export type UpdateCartQuantity = (cartItemId: string, quantity: number) => Promise<CartItem>;
-export type DeleteCartItem = (cartItemId: string) => Promise<unknown>;
+export type PayInfo = {
+  orderPrice: number;
+  deliveryFee: number;
+  totalOrderAmount: number;
+};
+
+export type Cart = {
+  isAllSelected: boolean;
+  cartItems: CartItem[];
+  payInfo: PayInfo;
+};
+
+export type FetchCart = () => Promise<Cart>;
+export type UpdateCartQuantity = (productId: string, quantity: number) => Promise<CartItem>;
+export type DeleteCartItem = (productId: string) => Promise<unknown>;

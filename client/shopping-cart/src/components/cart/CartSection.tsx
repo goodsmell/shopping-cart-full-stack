@@ -6,7 +6,6 @@ import CartItemList from './CartItemList';
 
 type Props = {
   cartItems: CartItem[];
-  selectItems: string[];
   isAllSelect: boolean;
   onSelectAll: () => void;
   onSelect: (id: string) => void;
@@ -16,7 +15,6 @@ type Props = {
 
 const CartSection = ({
   cartItems,
-  selectItems,
   isAllSelect,
   onSelectAll,
   onSelect,
@@ -56,7 +54,6 @@ const CartSection = ({
       <CartItemList
         cartItems={cartItems}
         handleSelect={onSelect}
-        selectItems={selectItems}
         onChangeQuantity={onChangeQuantity}
         onDelete={onDelete}
       />

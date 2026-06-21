@@ -1,33 +1,62 @@
 import { css } from '@emotion/react';
 import { useNavigate } from 'react-router';
-import { deleteCartItem, getCartList, updateCartQuantity } from '../apis/cartApi';
+import { updateCartSelect } from '../apis/cartApi';
+import { deleteCartItem, getCart, updateCartQuantity, updateCartSelectAll } from '../apis/cartApi';
 import PrimaryButton from '../components/buttons/PrimaryButton';
 import CartContent from '../components/cart/CartContent';
 import CartSection from '../components/cart/CartSection';
 import OrderSummary from '../components/cart/OrderSummary';
 import AppHeader from '../components/layout/AppHeader';
-import useCartActions from '../hooks/useCartActions';
-import useCartItems from '../hooks/useCartItems';
-import useSelectItems from '../hooks/useSelectItems';
-import { countCartItemTypes, calcOrderAmount, isFreeShipping } from '../utils/cart';
+import useCart from '../hooks/useCart';
+import { countCartItemTypes } from '../utils/cart';
 import SectionHeader from '../components/SectionHeader';
 
 const ShoppingCart = () => {
   const navigate = useNavigate();
-  const { cartItems, setCartItems, isLoading, isError } = useCartItems(getCartList);
-  const { selectItems, isAllSelect, handleToggleSelect, handleSelectAll, removeSelectItem } =
-    useSelectItems(cartItems);
-  const { handleQuantityChange, handleDeleteItem } = useCartActions({
-    cartItems,
-    setCartItems,
-    removeSelectItem,
-    updateQuantity: updateCartQuantity,
-    deleteItem: deleteCartItem,
-  });
+  const { cart, setCart, isLoading, isError } = useCart(getCart);
 
-  const purchasePrice = calcOrderAmount(cartItems, selectItems);
-  const shippingFee = isFreeShipping(purchasePrice) && selectItems.length >= 1 ? 3000 : 0;
-  const totalPurchasePrice = purchasePrice + shippingFee;
+  if (isLoading) return <p>로딩 중...</p>;
+  if (isError) return <p>장바구니를 불러오는 데 실패했습니다.</p>;
+  if (!cart) return null;
+
+  const handleSelect = async (productId: string) => {
+    const targetItem = cart.cartItems.find((item) => item.product.id === productId);
+    if (!targetItem) return;
+
+    try {
+      await updateCartSelect(productId, !targetItem.checkStatus);
+      setCart(await getCart());
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleSelectAll = async () => {
+    try {
+      await updateCartSelectAll(!cart.isAllSelected);
+      setCart(await getCart());
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDelete = async (productId: string) => {
+    try {
+      await deleteCartItem(productId);
+      setCart(await getCart());
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleQuantity = async (productId: string, quantity: number) => {
+    try {
+      await updateCartQuantity(productId, quantity);
+      setCart(await getCart());
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -52,39 +81,29 @@ const ShoppingCart = () => {
         `}
       >
         <SectionHeader title="장바구니">
-          {cartItems.length !== 0 && (
-            <p>현재 {countCartItemTypes(cartItems)} 종류의 상품이 담겨있습니다.</p>
+          {cart.cartItems.length !== 0 && (
+            <p>현재 {countCartItemTypes(cart.cartItems)} 종류의 상품이 담겨있습니다.</p>
           )}
         </SectionHeader>
 
-        <CartContent cartItems={cartItems} isLoading={isLoading} isError={isError}>
+        <CartContent cartItems={cart.cartItems} isLoading={isLoading} isError={isError}>
           <CartSection
-            cartItems={cartItems}
-            selectItems={selectItems}
-            isAllSelect={isAllSelect}
+            cartItems={cart.cartItems}
+            isAllSelect={cart.isAllSelected}
             onSelectAll={handleSelectAll}
-            onSelect={handleToggleSelect}
-            onChangeQuantity={handleQuantityChange}
-            onDelete={handleDeleteItem}
+            onSelect={handleSelect}
+            onChangeQuantity={handleQuantity}
+            onDelete={handleDelete}
           />
-          <OrderSummary
-            purchasePrice={purchasePrice}
-            shippingFee={shippingFee}
-            totalPurchasePrice={totalPurchasePrice}
-          />
+          <OrderSummary data = {cart.payInfo} />
         </CartContent>
       </main>
 
       <PrimaryButton
         text="주문 확인"
-        isDisabled={selectItems.length === 0}
+        isDisabled={!cart.cartItems.some((item) => item.checkStatus)}
         onClick={() => {
-          navigate('/order', {
-            state: {
-              selectedItems: cartItems.filter((item) => selectItems.includes(item.cartItemId)),
-              totalPurchasePrice,
-            },
-          });
+          navigate('/order-confirm');
         }}
       />
     </>

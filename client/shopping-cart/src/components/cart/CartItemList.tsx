@@ -7,18 +7,11 @@ import CartItemRaw from './CartItemRaw';
 type Props = {
   cartItems: CartItem[];
   handleSelect: (id: string) => void;
-  selectItems: string[];
   onChangeQuantity: (cartItemId: string, quantity: number) => Promise<void>;
   onDelete: (cartItemId: string) => Promise<void>;
 };
 
-const CartItemList = ({
-  cartItems,
-  handleSelect,
-  selectItems,
-  onChangeQuantity,
-  onDelete,
-}: Props) => {
+const CartItemList = ({ cartItems, handleSelect, onChangeQuantity, onDelete }: Props) => {
   return (
     <ul
       css={css`
@@ -39,11 +32,9 @@ const CartItemList = ({
       `}
     >
       {cartItems.map((cartItem) => {
-        const isSelected = selectItems.includes(cartItem.cartItemId);
-
         return (
           <li
-            key={cartItem.cartItemId}
+            key={cartItem.product.id}
             css={css`
               display: flex;
               flex-direction: column;
@@ -62,13 +53,13 @@ const CartItemList = ({
               `}
             >
               <OutlineButton
-                isActive={isSelected}
-                onClick={() => handleSelect(cartItem.cartItemId)}
+                isActive={cartItem.checkStatus}
+                onClick={() => handleSelect(cartItem.product.id)}
               >
-                <CheckIcon isActive={isSelected} />
+                <CheckIcon isActive={cartItem.checkStatus} />
               </OutlineButton>
 
-              <OutlineButton variant="text" onClick={() => onDelete(cartItem.cartItemId)}>
+              <OutlineButton variant="text" onClick={() => onDelete(cartItem.product.id)}>
                 <p
                   css={css`
                     font: var(--text-label);
@@ -80,11 +71,11 @@ const CartItemList = ({
             </div>
 
             <CartItemRaw
-              image={cartItem.product.image}
+              image={cartItem.product.imgUrl}
               name={cartItem.product.name}
               price={cartItem.product.price}
               quantity={cartItem.quantity}
-              onChangeQuantity={(quantity) => onChangeQuantity(cartItem.cartItemId, quantity)}
+              onChangeQuantity={(quantity) => onChangeQuantity(cartItem.product.id, quantity)}
             />
           </li>
         );

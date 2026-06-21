@@ -1,14 +1,13 @@
 import { css } from '@emotion/react';
 import infoIcon from '../../assets/info_icon.svg';
 import { formatPrice } from '../../utils/cart';
+import type { PayInfo } from '../../types';
 
 type Props = {
-  purchasePrice: number;
-  shippingFee: number;
-  totalPurchasePrice: number;
+  data: PayInfo;
 };
 
-const OrderSummary = ({ purchasePrice, shippingFee, totalPurchasePrice }: Props) => {
+const OrderSummary = ({ data }: Props) => {
   return (
     <section>
       <span
@@ -59,7 +58,7 @@ const OrderSummary = ({ purchasePrice, shippingFee, totalPurchasePrice }: Props)
                 font: var(--text-heading);
               `}
             >
-              {formatPrice(purchasePrice)}
+              {formatPrice(data.orderPrice)}
             </p>
           </div>
 
@@ -85,7 +84,7 @@ const OrderSummary = ({ purchasePrice, shippingFee, totalPurchasePrice }: Props)
                 font: var(--text-heading);
               `}
             >
-              {formatPrice(shippingFee)}
+              {formatPrice(data.deliveryFee)}
             </p>
           </div>
         </section>
@@ -116,7 +115,7 @@ const OrderSummary = ({ purchasePrice, shippingFee, totalPurchasePrice }: Props)
                 font: var(--text-heading);
               `}
             >
-              {formatPrice(totalPurchasePrice)}
+              {formatPrice(data.totalOrderAmount)}
             </p>
           </div>
         </section>

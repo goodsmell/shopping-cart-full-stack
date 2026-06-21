@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
-import type { CartItem, FetchCartItems } from '../types';
+import type { Cart, FetchCart } from '../types';
 
-const useCartItems = (fetchCartItems: FetchCartItems) => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+const useCart = (fetchCart: FetchCart) => {
+  const [cart, setCart] = useState<Cart>();
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     const loadCartItems = async () => {
       try {
-        const data = await fetchCartItems();
-        setCartItems(data);
+        const data = await fetchCart();
+        setCart(data);
       } catch (error) {
         console.error(error);
         setIsError(true);
@@ -24,7 +24,7 @@ const useCartItems = (fetchCartItems: FetchCartItems) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return { cartItems, setCartItems, isLoading, isError };
+  return { cart, setCart, isLoading, isError };
 };
 
-export default useCartItems;
+export default useCart;
