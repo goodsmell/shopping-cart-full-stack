@@ -3,11 +3,11 @@ import { useNavigate, useLocation, Navigate } from 'react-router';
 import AppHeader from '../components/layout/AppHeader';
 import PrimaryButton from '../components/buttons/PrimaryButton';
 import backIcon from '../assets/back_icon.svg';
-import type { CartItem } from '../types';
+import type { OrderCheckProduct } from '../types';
 import { formatPrice } from '../utils/cart';
 
 type PaymentConfirmState = {
-  selectedItems: CartItem[];
+  selectedItems: OrderCheckProduct[];
   totalPurchasePrice: number;
 };
 
@@ -83,7 +83,12 @@ const PaymentConfirm = () => {
           </h2>
         </section>
       </div>
-      <PrimaryButton text="결제하기" onClick={() => {}} />
+      <PrimaryButton
+        text="장바구니로 돌아가기"
+        onClick={() => {
+          navigate('/');
+        }}
+      />
     </>
   );
 };
