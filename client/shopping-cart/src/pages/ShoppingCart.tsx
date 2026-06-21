@@ -3,37 +3,27 @@ import { useNavigate } from 'react-router';
 import { updateCartSelect } from '../apis/cartApi';
 import { deleteCartItem, getCart, updateCartQuantity, updateCartSelectAll } from '../apis/cartApi';
 import PrimaryButton from '../components/buttons/PrimaryButton';
-import CartContent from '../components/cart/CartContent';
-import CartSection from '../components/cart/CartSection';
-import OrderSummary from '../components/common/OrderSummary';
+import CartBody from '../components/cart/CartBody';
+import ProductRawSkeleton from '../components/common/ProductRawSkeleton';
 import AppHeader from '../components/layout/AppHeader';
 import useCart from '../hooks/useCart';
-import { countCartItemTypes } from '../utils/cart';
-import SectionHeader from '../components/common/SectionHeader';
 
 const ShoppingCart = () => {
   const navigate = useNavigate();
   const { cart, setCart, isLoading, isError } = useCart(getCart);
 
-  if (isLoading) return <p>로딩 중...</p>;
-  if (isError) return <p>장바구니를 불러오는 데 실패했습니다.</p>;
-  if (!cart) return null;
-
-  const handleSelect = async (productId: string) => {
-    const targetItem = cart.cartItems.find((item) => item.product.id === productId);
-    if (!targetItem) return;
-
+  const handleSelect = async (productId: string, nextCheckStatus: boolean) => {
     try {
-      await updateCartSelect(productId, !targetItem.checkStatus);
+      await updateCartSelect(productId, nextCheckStatus);
       setCart(await getCart());
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleSelectAll = async () => {
+  const handleSelectAll = async (nextIsAllSelected: boolean) => {
     try {
-      await updateCartSelectAll(!cart.isAllSelected);
+      await updateCartSelectAll(nextIsAllSelected);
       setCart(await getCart());
     } catch (error) {
       console.error(error);
@@ -80,28 +70,41 @@ const ShoppingCart = () => {
           overflow-y: auto;
         `}
       >
-        <SectionHeader title="장바구니">
-          {cart.cartItems.length !== 0 && (
-            <p>현재 {countCartItemTypes(cart.cartItems)} 종류의 상품이 담겨있습니다.</p>
-          )}
-        </SectionHeader>
-
-        <CartContent cartItems={cart.cartItems} isLoading={isLoading} isError={isError}>
-          <CartSection
-            cartItems={cart.cartItems}
-            isAllSelect={cart.isAllSelected}
-            onSelectAll={handleSelectAll}
-            onSelect={handleSelect}
-            onChangeQuantity={handleQuantity}
-            onDelete={handleDelete}
-          />
-          <OrderSummary data = {cart.payInfo} />
-        </CartContent>
+        {isLoading ? (
+          <ul
+            css={css`
+              list-style: none;
+              margin: 0;
+              padding: 0;
+            `}
+          >
+            {Array.from({ length: 3 }).map((_, i) => (
+              <ProductRawSkeleton key={i} />
+            ))}
+          </ul>
+        ) : isError ? (
+          <p>장바구니를 불러오는 데 실패했습니다.</p>
+        ) : (
+          cart &&
+          (cart.cartItems.length === 0 ? (
+            <p>장바구니에 담은 상품이 없습니다.</p>
+          ) : (
+            <>
+              <CartBody
+                cart={cart}
+                onSelect={handleSelect}
+                onSelectAll={handleSelectAll}
+                onDelete={handleDelete}
+                onChangeQuantity={handleQuantity}
+              />
+            </>
+          ))
+        )}
       </main>
 
       <PrimaryButton
         text="주문 확인"
-        isDisabled={!cart.cartItems.some((item) => item.checkStatus)}
+        isDisabled={!cart || !cart.cartItems.some((item) => item.checkStatus)}
         onClick={() => {
           navigate('/order-confirm');
         }}

@@ -7,8 +7,8 @@ import CartItemList from './CartItemList';
 type Props = {
   cartItems: CartItem[];
   isAllSelect: boolean;
-  onSelectAll: () => void;
-  onSelect: (id: string) => void;
+  onSelectAll: (nextIsAllSelected: boolean) => void;
+  onSelect: (id: string, nextCheckStatus: boolean) => void;
   onChangeQuantity: (cartItemId: string, quantity: number) => Promise<void>;
   onDelete: (cartItemId: string) => Promise<void>;
 };
@@ -39,7 +39,7 @@ const CartSection = ({
           align-items: center;
         `}
       >
-        <OutlineButton onClick={onSelectAll} isActive={isAllSelect}>
+        <OutlineButton onClick={() => onSelectAll(!isAllSelect)} isActive={isAllSelect}>
           <CheckIcon isActive={isAllSelect} />
         </OutlineButton>
         <p

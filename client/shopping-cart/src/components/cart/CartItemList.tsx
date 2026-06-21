@@ -6,7 +6,7 @@ import ProductRaw from '../common/ProductRaw';
 import QuantityControl from './QuantityControl';
 type Props = {
   cartItems: CartItem[];
-  handleSelect: (id: string) => void;
+  handleSelect: (id: string, nextCheckStatus: boolean) => void;
   onChangeQuantity: (cartItemId: string, quantity: number) => Promise<void>;
   onDelete: (cartItemId: string) => Promise<void>;
 };
@@ -54,7 +54,7 @@ const CartItemList = ({ cartItems, handleSelect, onChangeQuantity, onDelete }: P
             >
               <OutlineButton
                 isActive={cartItem.checkStatus}
-                onClick={() => handleSelect(cartItem.product.id)}
+                onClick={() => handleSelect(cartItem.product.id, !cartItem.checkStatus)}
               >
                 <CheckIcon isActive={cartItem.checkStatus} />
               </OutlineButton>
