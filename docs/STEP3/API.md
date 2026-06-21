@@ -727,14 +727,23 @@ GET /order-check/coupons
     "coupons": [
       {
         "couponId": "string",
-        "disabled": "boolean",
-        "description": [{ "title": "string", "content": "string" }],
+        "couponTitle": "string",
+        "disabled": "boolean", // 현재 주문에 적용 불가능한 쿠폰이면 true
+        "description": [
+          // type에 따라 content 모양이 달라진다
+          { "type": "EXPIRY_DATE", "content": { "expiresAt": "string" } },
+          { "type": "MIN_ORDER_AMOUNT", "content": { "minAmount": "number" } },
+          { "type": "USABLE_TIME", "content": { "from": "string", "to": "string" } },
+          { "type": "MIN_QUANTITY_PER_PRODUCT", "content": { "minQuantity": "number" } },
+        ],
       },
     ],
     "selectedCoupons": "string[]",
   },
 }
 ```
+
+> `disabled`인 쿠폰도 목록에는 그대로 포함된다 (보유는 했지만 현재 주문 조건상 사용할 수 없음을 알려주기 위함).
 
 ---
 
