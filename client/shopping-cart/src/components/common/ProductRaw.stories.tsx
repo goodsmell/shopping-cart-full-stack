@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import ProductRaw from './ProductRaw';
 
 const meta: Meta<typeof ProductRaw> = {
+  title: 'Common/ProductRaw',
   component: ProductRaw,
 };
 

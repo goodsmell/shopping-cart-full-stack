@@ -6,6 +6,7 @@ import { CheckIcon } from '../icons/CheckIcon';
 import OutlineButton from './OutlineButton';
 
 const meta: Meta<typeof OutlineButton> = {
+  title: 'Buttons/OutlineButton',
   component: OutlineButton,
   argTypes: {
     onClick: { action: 'clicked' },

@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import PrimaryButton from './PrimaryButton';
 
 const meta: Meta<typeof PrimaryButton> = {
+  title: 'Buttons/PrimaryButton',
   component: PrimaryButton,
   argTypes: {
     onClick: { action: 'clicked' },
