@@ -91,15 +91,7 @@ const OrderConfirm = () => {
       <PrimaryButton
         text="결제 하기"
         isDisabled={!order}
-        onClick={() => {
-          if (!order) return;
-          navigate('/payment-confirm', {
-            state: {
-              selectedItems: order.products,
-              totalPurchasePrice: order.payInfo.totalOrderAmount,
-            },
-          });
-        }}
+        onClick={() => navigate('/payment-confirm')}
       />
     </>
   );
