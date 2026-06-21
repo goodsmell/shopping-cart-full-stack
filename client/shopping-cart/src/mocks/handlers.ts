@@ -20,15 +20,22 @@ type StoredCartItem = {
   checkStatus: boolean;
 };
 
+type CouponDescription =
+  | { type: 'EXPIRY_DATE'; content: { expiresAt: string } }
+  | { type: 'MIN_ORDER_AMOUNT'; content: { minAmount: number } }
+  | { type: 'USABLE_TIME'; content: { from: string; to: string } }
+  | { type: 'MIN_QUANTITY_PER_PRODUCT'; content: { minQuantity: number } };
+
 type Coupon = {
   couponId: string;
+  couponTitle: string;
   disabled: boolean;
-  discountAmount: number;
-  description: { title: string; content: string }[];
+  description: CouponDescription[];
 };
 
 const FREE_SHIPPING_THRESHOLD = 100000;
 const DELIVERY_FEE = 3000;
+const REMOTE_AREA_EXTRA_FEE = 3000;
 
 let products: Product[] = [
   {
@@ -59,22 +66,47 @@ let cartItems: StoredCartItem[] = [
 
 const coupons: Coupon[] = [
   {
-    couponId: 'c1',
+    couponId: 'FIXED5000',
+    couponTitle: '5,000원 할인 쿠폰',
     disabled: false,
-    discountAmount: 3000,
-    description: [{ title: '3,000원 할인', content: '5만원 이상 구매 시 사용 가능' }],
+    description: [
+      { type: 'MIN_ORDER_AMOUNT', content: { minAmount: 100000 } },
+      { type: 'EXPIRY_DATE', content: { expiresAt: '2026-11-30' } },
+    ],
   },
   {
-    couponId: 'c2',
+    couponId: 'BOGO',
+    couponTitle: '2+1 쿠폰',
+    disabled: true,
+    description: [
+      { type: 'MIN_QUANTITY_PER_PRODUCT', content: { minQuantity: 2 } },
+      { type: 'EXPIRY_DATE', content: { expiresAt: '2026-06-30' } },
+    ],
+  },
+  {
+    couponId: 'FREESHIPPING',
+    couponTitle: '무료 배송 쿠폰',
     disabled: false,
-    discountAmount: 5000,
-    description: [{ title: '5,000원 할인', content: '10만원 이상 구매 시 사용 가능' }],
+    description: [
+      { type: 'MIN_ORDER_AMOUNT', content: { minAmount: 50000 } },
+      { type: 'EXPIRY_DATE', content: { expiresAt: '2026-08-31' } },
+    ],
+  },
+  {
+    couponId: 'MIRACLESALE',
+    couponTitle: '30% 시간제 할인 쿠폰',
+    disabled: false,
+    description: [
+      { type: 'USABLE_TIME', content: { from: '04:00', to: '07:00' } },
+      { type: 'EXPIRY_DATE', content: { expiresAt: '2026-07-31' } },
+    ],
   },
 ];
 
 // POST /order-check 시점에 선택된(checkStatus: true) 장바구니 상품의 스냅샷. 생성 전이면 null.
 let orderCheckItems: StoredCartItem[] | null = null;
 let remoteAreaSelected = false;
+let appliedCouponIds: string[] = [];
 
 const success = <T>(data: T, status = 200) => HttpResponse.json({ status, data }, { status });
 
@@ -85,6 +117,86 @@ const calcPayInfo = (items: StoredCartItem[]) => {
   const orderPrice = items.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
   const deliveryFee = orderPrice === 0 || orderPrice >= FREE_SHIPPING_THRESHOLD ? 0 : DELIVERY_FEE;
   return { orderPrice, deliveryFee, totalOrderAmount: orderPrice + deliveryFee };
+};
+
+const calcPayInfoWithCoupon = (
+  items: StoredCartItem[],
+  appliedCouponIds: string[],
+  isRemoteAreaSelected: boolean,
+) => {
+  const payInfo = calcPayInfo(items);
+  const deliveryFee =
+    payInfo.deliveryFee + (payInfo.orderPrice > 0 && isRemoteAreaSelected ? REMOTE_AREA_EXTRA_FEE : 0);
+  const couponDiscountAmount = calcCouponDiscountAmount(appliedCouponIds, items);
+  const totalOrderAmount = Math.max(payInfo.orderPrice + deliveryFee - couponDiscountAmount, 0);
+
+  return { orderPrice: payInfo.orderPrice, deliveryFee, couponDiscountAmount, totalOrderAmount };
+};
+
+// 쿠폰 목록(coupons)은 클라이언트에 보여줄 표시용 정보만 담고 있어서,
+// 할인액 계산에 필요한 내부 정보는 여기에 별도로 둔다.
+type CouponCalcInfo =
+  | { couponId: string; discountType: 'FIXED'; discountValue: number }
+  | { couponId: string; discountType: 'PERCENTAGE'; discountValue: number }
+  | {
+      couponId: string;
+      discountType: 'BOGO';
+      minQuantityPerProduct: number;
+      getPerProduct: number;
+    }
+  | { couponId: string; discountType: 'FREE_SHIPPING' };
+
+const couponCalcInfos: CouponCalcInfo[] = [
+  { couponId: 'FIXED5000', discountType: 'FIXED', discountValue: 5000 },
+  { couponId: 'BOGO', discountType: 'BOGO', minQuantityPerProduct: 2, getPerProduct: 1 },
+  { couponId: 'FREESHIPPING', discountType: 'FREE_SHIPPING' },
+  { couponId: 'MIRACLESALE', discountType: 'PERCENTAGE', discountValue: 0.3 },
+];
+
+const couponApplicationPriority: Record<CouponCalcInfo['discountType'], number> = {
+  FIXED: 1,
+  BOGO: 1,
+  PERCENTAGE: 2,
+  FREE_SHIPPING: 3,
+};
+
+const calcCouponDiscountAmount = (selectedCouponIds: string[], items: StoredCartItem[]) => {
+  const payInfo = calcPayInfo(items);
+  const selectedInfos = selectedCouponIds
+    .map((couponId) => couponCalcInfos.find((info) => info.couponId === couponId))
+    .filter((info): info is CouponCalcInfo => info !== undefined)
+    .sort(
+      (a, b) => couponApplicationPriority[a.discountType] - couponApplicationPriority[b.discountType],
+    );
+
+  let remainingOrderAmount = payInfo.orderPrice;
+  let orderDiscountAmount = 0;
+  let shippingDiscountAmount = 0;
+
+  for (const info of selectedInfos) {
+    if (info.discountType === 'FIXED') {
+      const discount = Math.min(remainingOrderAmount, info.discountValue);
+      remainingOrderAmount -= discount;
+      orderDiscountAmount += discount;
+    } else if (info.discountType === 'PERCENTAGE') {
+      const discount = Math.floor(remainingOrderAmount * info.discountValue);
+      remainingOrderAmount -= discount;
+      orderDiscountAmount += discount;
+    } else if (info.discountType === 'BOGO') {
+      const minQuantity = info.minQuantityPerProduct + info.getPerProduct;
+      const eligibleItems = items.filter((item) => item.quantity >= minQuantity);
+      if (eligibleItems.length > 0) {
+        const highestPrice = Math.max(...eligibleItems.map((item) => item.product.price));
+        const discount = Math.min(remainingOrderAmount, highestPrice * info.getPerProduct);
+        remainingOrderAmount -= discount;
+        orderDiscountAmount += discount;
+      }
+    } else if (info.discountType === 'FREE_SHIPPING') {
+      shippingDiscountAmount = payInfo.deliveryFee;
+    }
+  }
+
+  return orderDiscountAmount + shippingDiscountAmount;
 };
 
 // body가 JSON 형식이 아니면 null을 반환해 NO_JSON 분기에서 쓰도록 한다.
@@ -233,16 +345,18 @@ export const handlers = [
         imgUrl: item.product.imgUrl,
         quantity: item.quantity,
       })),
-      payInfo: { ...calcPayInfo(items), couponDiscountAmount: 0 },
+      payInfo: calcPayInfoWithCoupon(items, appliedCouponIds, remoteAreaSelected),
     });
   }),
 
   http.get(`${BASE_URL}/order-check/pay-info`, () => {
     if (!orderCheckItems) return fail(404, 'RESOURCE_NOT_FOUND', '생성된 주문이 없습니다.');
-    return success({ ...calcPayInfo(orderCheckItems), couponDiscountAmount: 0 });
+    return success(calcPayInfoWithCoupon(orderCheckItems, appliedCouponIds, remoteAreaSelected));
   }),
 
   http.patch(`${BASE_URL}/order-check/select/remote-areas`, async ({ request }) => {
+    if (!orderCheckItems) return fail(404, 'RESOURCE_NOT_FOUND', '생성된 주문이 없습니다.');
+
     const body = await parseJsonBody(request);
     if (body === null || body.checkStatus === undefined) {
       return fail(400, 'MISSING_FIELD', 'checkStatus가 누락되었습니다.', [
@@ -257,7 +371,9 @@ export const handlers = [
   // ------------------------------------------------------------------------
   // 쿠폰 (Coupon)
   // ------------------------------------------------------------------------
-  http.get(`${BASE_URL}/order-check/coupons`, () => success({ coupons })),
+  http.get(`${BASE_URL}/order-check/coupons`, () =>
+    success({ coupons, selectedCoupons: appliedCouponIds }),
+  ),
 
   http.patch(`${BASE_URL}/order-check/coupons`, async ({ request }) => {
     const body = await parseJsonBody(request);
@@ -270,6 +386,27 @@ export const handlers = [
       });
     }
 
+    appliedCouponIds = selectedCouponId;
     return new HttpResponse(null, { status: 204 });
+  }),
+
+  http.post(`${BASE_URL}/order-check/coupons`, async ({ request }) => {
+    const body = await parseJsonBody(request);
+    if (body === null) return fail(400, 'NO_JSON', '요청 body가 JSON 형식이 아닙니다.');
+
+    const selectedCouponId: string[] | undefined = body.selectedCouponId;
+    if (selectedCouponId === undefined) {
+      return fail(400, 'MISSING_FIELD', 'selectedCouponId는 필수입니다.', [
+        { type: 'selectedCouponId', errorCode: 'REQUIRED' },
+      ]);
+    }
+    if (selectedCouponId.length > 2) {
+      return fail(400, 'INVALID', '쿠폰은 최대 2개까지 선택할 수 있습니다.', {
+        errorCode: 'INVALID_COUPON_COUNT',
+      });
+    }
+
+    const items = orderCheckItems ?? [];
+    return success({ discountAmount: calcCouponDiscountAmount(selectedCouponId, items) });
   }),
 ];
