@@ -4,7 +4,7 @@ import { formatPrice } from '../../utils/cart';
 import type { PayInfo } from '../../types';
 
 type Props = {
-  data: Omit<PayInfo, 'couponDiscountAmount'>;
+  data: Omit<PayInfo, 'couponDiscountAmount'> & Partial<Pick<PayInfo, 'couponDiscountAmount'>>;
 };
 
 const OrderSummary = ({ data }: Props) => {
@@ -58,7 +58,7 @@ const OrderSummary = ({ data }: Props) => {
                 font: var(--text-heading);
               `}
             >
-              {formatPrice(data.orderPrice)}
+              {formatPrice(data.orderPrice)}원
             </p>
           </div>
 
@@ -84,9 +84,36 @@ const OrderSummary = ({ data }: Props) => {
                 font: var(--text-heading);
               `}
             >
-              {formatPrice(data.deliveryFee)}
+              {formatPrice(data.deliveryFee)}원
             </p>
           </div>
+
+          {data.couponDiscountAmount !== undefined && (
+            <div
+              css={css`
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                padding: 8px 0;
+              `}
+            >
+              <h3
+                css={css`
+                  font: var(--text-subheading);
+                `}
+              >
+                할인 금액
+              </h3>
+              <p
+                css={css`
+                  font: var(--text-heading);
+                `}
+              >
+                -{formatPrice(data.couponDiscountAmount ?? 0)}원
+              </p>
+            </div>
+          )}
         </section>
 
         <section
@@ -115,7 +142,7 @@ const OrderSummary = ({ data }: Props) => {
                 font: var(--text-heading);
               `}
             >
-              {formatPrice(data.totalOrderAmount)}
+              {formatPrice(data.totalOrderAmount)}원
             </p>
           </div>
         </section>
