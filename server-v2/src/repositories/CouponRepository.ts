@@ -11,8 +11,17 @@ type BaseCouponRecord = {
 
 export type CouponRecord =
   | (BaseCouponRecord & { discountType: 'FIXED'; discountValue: number })
-  | (BaseCouponRecord & { discountType: 'PERCENTAGE'; discountValue: number; usableTime?: { from: string; to: string } })
-  | (BaseCouponRecord & { discountType: 'BOGO'; discountValue: 0; minQuantityPerProduct: number; getPerProduct: number })
+  | (BaseCouponRecord & {
+      discountType: 'PERCENTAGE';
+      discountValue: number;
+      usableTime?: { from: string; to: string };
+    })
+  | (BaseCouponRecord & {
+      discountType: 'BOGO';
+      discountValue: 0;
+      minQuantityPerProduct: number;
+      getPerProduct: number;
+    })
   | (BaseCouponRecord & { discountType: 'FREE_SHIPPING'; discountValue: 0 });
 
 const couponRecords = new Map<string, CouponRecord>();
@@ -32,7 +41,7 @@ const dummyCouponRecords: CouponRecord[] = [
   },
   {
     couponId: 'BOGO',
-    couponTitle: '2+1 쿠폰',
+    couponTitle: '2개 구매 시 1개 무료 쿠폰',
     discountType: 'BOGO',
     discountValue: 0,
     minOrderAmount: 0,
@@ -46,7 +55,7 @@ const dummyCouponRecords: CouponRecord[] = [
   },
   {
     couponId: 'FREESHIPPING',
-    couponTitle: '무료 배송 쿠폰',
+    couponTitle: '5만원 이상 구매 시 무료 배송 쿠폰',
     discountType: 'FREE_SHIPPING',
     discountValue: 0,
     minOrderAmount: 50000,
@@ -58,7 +67,7 @@ const dummyCouponRecords: CouponRecord[] = [
   },
   {
     couponId: 'MIRACLESALE',
-    couponTitle: '30% 시간제 할인 쿠폰',
+    couponTitle: '미라클모닝 30% 할인 쿠폰',
     discountType: 'PERCENTAGE',
     discountValue: 0.3,
     minOrderAmount: 0,
