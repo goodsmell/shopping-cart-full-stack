@@ -20,14 +20,12 @@ const CartSection = ({
   onChangeQuantity,
   onDelete,
 }: Props) => {
-
   return (
     <section
       css={css`
         display: flex;
         flex-direction: column;
         gap: 20px;
-        max-height: 382px;
       `}
     >
       <CheckboxLabel

@@ -17,18 +17,9 @@ const CartItemList = ({ cartItems, handleSelect, onChangeQuantity, onDelete }: P
       css={css`
         display: flex;
         flex-direction: column;
-        flex: 1;
-        min-height: 0;
         list-style: none;
         margin: 0;
         padding: 0;
-        overflow-y: auto;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-
-        &::-webkit-scrollbar {
-          display: none;
-        }
       `}
     >
       {cartItems.map((cartItem) => {
