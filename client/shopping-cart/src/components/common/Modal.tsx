@@ -45,7 +45,7 @@ const ModalLayout = ({ isOpen, onClose, title, children }: Props) => {
           max-height: 70vh;
           margin: 0 24px;
           padding: 24px;
-          border-radius: 12px;
+          border-radius: 8px;
           background: var(--color-white);
         `}
         onClick={(event) => event.stopPropagation()}
@@ -56,7 +56,7 @@ const ModalLayout = ({ isOpen, onClose, title, children }: Props) => {
             justify-content: space-between;
             align-items: center;
             flex-shrink: 0;
-            margin-bottom: 16px;
+            margin-bottom: 32px;
           `}
         >
           {title && (

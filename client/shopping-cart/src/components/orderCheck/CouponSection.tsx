@@ -42,8 +42,8 @@ const CouponSection = ({
             flex: 1;
             min-height: 0;
             gap: 12px;
-            margin: 12px 0 0;
             padding: 0;
+            margin: 17px 0 32px;
             list-style: none;
             overflow-y: auto;
           `}
@@ -56,18 +56,25 @@ const CouponSection = ({
                 key={coupon.couponId}
                 css={css`
                   display: flex;
-                  gap: 8px;
-                  align-items: center;
+                  flex-direction: column;
+                  gap: 12px;
                   padding: 12px 0;
                   border-top: 1px solid var(--color-line);
                 `}
               >
-                <Checkbox
-                  isSelected={isSelected}
-                  disabled={coupon.disabled}
-                  onToggle={() => onToggle(coupon.couponId)}
-                />
-                <div>
+                <div
+                  css={css`
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    gap: 8px;
+                  `}
+                >
+                  <Checkbox
+                    isSelected={isSelected}
+                    disabled={coupon.disabled}
+                    onToggle={() => onToggle(coupon.couponId)}
+                  />
                   <p
                     css={css`
                       font: var(--text-subheading);
@@ -76,6 +83,14 @@ const CouponSection = ({
                   >
                     {coupon.couponTitle}
                   </p>
+                </div>
+                <div
+                  css={css`
+                    display: flex;
+                    flex-direction: column;
+                    gap: 4px;
+                  `}
+                >
                   {coupon.description.map((desc) => (
                     <p
                       key={desc.type}
