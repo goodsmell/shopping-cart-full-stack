@@ -1,8 +1,8 @@
 import { css } from '@emotion/react';
 import ModalLayout from '../common/Modal';
 import InfoNotice from '../common/InfoNotice';
-import OutlineButton from '../buttons/OutlineButton';
-import { CheckIcon } from '../icons/CheckIcon';
+import Checkbox from '../common/Checkbox';
+import CouponApplyButton from '../common/CouponApplyButton';
 import { formatCouponDescription } from '../../utils/coupon';
 import { formatPrice } from '../../utils/price';
 import type { CouponInfo } from '../../types';
@@ -30,30 +30,7 @@ const CouponSection = ({
 }: Props) => {
   return (
     <>
-      <button
-        css={css`
-          width: 100%;
-          height: 48px;
-          flex-shrink: 0;
-          justify-content: center;
-          align-items: center;
-          border-radius: 5px;
-          border: 1px solid #33333340;
-          background: none;
-
-          cursor: pointer;
-        `}
-        onClick={onOpen}
-      >
-        <p
-          css={css`
-            font: var(--text-button);
-            color: #333333bf;
-          `}
-        >
-          쿠폰 적용
-        </p>
-      </button>
+      <CouponApplyButton onClick={onOpen} />
 
       <ModalLayout isOpen={isModalOpen} onClose={onClose} title="쿠폰을 선택해 주세요">
         <InfoNotice text="쿠폰은 최대 2개까지 사용할 수 있습니다." />
@@ -85,13 +62,11 @@ const CouponSection = ({
                   border-top: 1px solid var(--color-line);
                 `}
               >
-                <OutlineButton
-                  isActive={isSelected}
+                <Checkbox
+                  isSelected={isSelected}
                   disabled={coupon.disabled}
-                  onClick={() => onToggle(coupon.couponId)}
-                >
-                  <CheckIcon isActive={isSelected} />
-                </OutlineButton>
+                  onToggle={() => onToggle(coupon.couponId)}
+                />
                 <div>
                   <p
                     css={css`

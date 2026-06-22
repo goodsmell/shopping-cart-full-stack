@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
 import type { CartItem } from '../../types';
-import OutlineButton from '../buttons/OutlineButton';
-import { CheckIcon } from '../icons/CheckIcon';
+import CheckboxLabel from '../common/CheckboxLabel';
 import CartItemList from './CartItemList';
 
 type Props = {
@@ -31,25 +30,11 @@ const CartSection = ({
         max-height: 382px;
       `}
     >
-      <div
-        css={css`
-          display: flex;
-          flex-direction: row;
-          gap: 8px;
-          align-items: center;
-        `}
-      >
-        <OutlineButton onClick={() => onSelectAll(!isAllSelect)} isActive={isAllSelect}>
-          <CheckIcon isActive={isAllSelect} />
-        </OutlineButton>
-        <p
-          css={css`
-            font: var(--text-label);
-          `}
-        >
-          전체 선택
-        </p>
-      </div>
+      <CheckboxLabel
+        isSelected={isAllSelect}
+        onToggle={() => onSelectAll(!isAllSelect)}
+        label="전체 선택"
+      />
 
       <CartItemList
         cartItems={cartItems}

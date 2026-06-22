@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
-import OutlineButton from '../buttons/OutlineButton';
-import { CheckIcon } from '../icons/CheckIcon';
+import CheckboxLabel from '../common/CheckboxLabel';
 
 type Props = {
   isSelected: boolean;
@@ -24,24 +23,7 @@ const RemoteAreaSelect = ({ isSelected, onToggle }: Props) => {
       >
         배송 정보
       </p>
-      <div
-        css={css`
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        `}
-      >
-        <OutlineButton isActive={isSelected} onClick={onToggle}>
-          <CheckIcon isActive={isSelected} />
-        </OutlineButton>
-        <p
-          css={css`
-            font: var(--text-label);
-          `}
-        >
-          제주도 및 도서 산간 지역
-        </p>
-      </div>
+      <CheckboxLabel isSelected={isSelected} onToggle={onToggle} label="제주도 및 도서 산간 지역" />
     </section>
   );
 };

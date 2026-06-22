@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import type { CartItem } from '../../types';
-import OutlineButton from '../buttons/OutlineButton';
-import { CheckIcon } from '../icons/CheckIcon';
+import Checkbox from '../common/Checkbox';
+import DeleteButton from '../common/DeleteButton';
 import ProductRaw from '../common/ProductRaw';
 import QuantityControl from './QuantityControl';
 type Props = {
@@ -52,22 +52,12 @@ const CartItemList = ({ cartItems, handleSelect, onChangeQuantity, onDelete }: P
                 width: 100%;
               `}
             >
-              <OutlineButton
-                isActive={cartItem.checkStatus}
-                onClick={() => handleSelect(cartItem.product.id, !cartItem.checkStatus)}
-              >
-                <CheckIcon isActive={cartItem.checkStatus} />
-              </OutlineButton>
+              <Checkbox
+                isSelected={cartItem.checkStatus}
+                onToggle={() => handleSelect(cartItem.product.id, !cartItem.checkStatus)}
+              />
 
-              <OutlineButton variant="text" onClick={() => onDelete(cartItem.product.id)}>
-                <p
-                  css={css`
-                    font: var(--text-label);
-                  `}
-                >
-                  삭제
-                </p>
-              </OutlineButton>
+              <DeleteButton onClick={() => onDelete(cartItem.product.id)} />
             </div>
 
             <ProductRaw
