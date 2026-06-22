@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { CheckIcon } from '../icons/CheckIcon';
+import { CheckIcon } from '../../icons/CheckIcon';
 import IconButton from './IconButton';
 
 const meta: Meta<typeof IconButton> = {

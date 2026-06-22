@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, Navigate } from 'react-router';
 
 import AppHeader from '../components/layout/AppHeader';
-import PrimaryButton from '../components/buttons/PrimaryButton';
+import PrimaryButton from '../components/common/buttons/PrimaryButton';
 import AsyncContent from '../components/common/AsyncContent';
 import ProductRawSkeleton from '../components/common/ProductRawSkeleton';
 

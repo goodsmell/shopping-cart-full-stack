@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import type { CartItem } from '../../types';
-import Checkbox from '../common/Checkbox';
-import DeleteButton from '../common/DeleteButton';
+import Checkbox from '../common/buttons/Checkbox';
+import DeleteButton from '../common/buttons/DeleteButton';
 import ProductRaw from '../common/ProductRaw';
 import QuantityControl from './QuantityControl';
 type Props = {

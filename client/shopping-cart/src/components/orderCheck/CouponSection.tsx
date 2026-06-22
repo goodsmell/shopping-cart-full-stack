@@ -1,8 +1,8 @@
 import { css } from '@emotion/react';
 import ModalLayout from '../common/Modal';
 import InfoNotice from '../common/InfoNotice';
-import Checkbox from '../common/Checkbox';
-import CouponApplyButton from '../common/CouponApplyButton';
+import Checkbox from '../common/buttons/Checkbox';
+import CouponApplyButton from '../common/buttons/CouponApplyButton';
 import { formatCouponDescription } from '../../utils/coupon';
 import { formatPrice } from '../../utils/price';
 import type { CouponInfo } from '../../types';

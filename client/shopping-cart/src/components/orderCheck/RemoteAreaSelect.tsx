@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import CheckboxLabel from '../common/CheckboxLabel';
+import CheckboxLabel from '../common/buttons/CheckboxLabel';
 
 type Props = {
   isSelected: boolean;

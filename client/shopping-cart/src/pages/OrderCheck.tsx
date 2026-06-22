@@ -11,7 +11,7 @@ import RemoteAreaSelect from '../components/orderCheck/RemoteAreaSelect';
 import useOrderCheck from '../hooks/useOrderCheck';
 import useCoupon from '../hooks/useCoupon';
 import useRemoteArea from '../hooks/useRemoteArea';
-import PrimaryButton from '../components/buttons/PrimaryButton';
+import PrimaryButton from '../components/common/buttons/PrimaryButton';
 import backIcon from '../assets/back_icon.svg';
 import { getOrderCheck } from '../apis/orderCheckApi';
 

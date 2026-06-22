@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { useNavigate } from 'react-router';
 
-import PrimaryButton from '../components/buttons/PrimaryButton';
+import PrimaryButton from '../components/common/buttons/PrimaryButton';
 import CartBody from '../components/cart/CartBody';
 import ProductRawSkeleton from '../components/common/ProductRawSkeleton';
 import AsyncContent from '../components/common/AsyncContent';

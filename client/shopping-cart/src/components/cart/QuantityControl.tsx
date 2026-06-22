@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import minusIcon from '../../assets/minus_icon.svg';
 import plusIcon from '../../assets/plus_icon.svg';
-import IconButton from '../common/IconButton';
+import IconButton from '../common/buttons/IconButton';
 
 type Props = {
   quantity: number;

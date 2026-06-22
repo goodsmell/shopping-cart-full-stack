@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import type { CartItem } from '../../types';
-import CheckboxLabel from '../common/CheckboxLabel';
+import CheckboxLabel from '../common/buttons/CheckboxLabel';
 import CartItemList from './CartItemList';
 
 type Props = {
