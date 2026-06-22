@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 import AppHeader from '../components/layout/AppHeader';
 import ProductRawSkeleton from '../components/common/ProductRawSkeleton';
 import AsyncContent from '../components/common/AsyncContent';
-import OrderConfirmBody from '../components/orderCheck/OrderConfirmBody';
+import OrderCheckBody from '../components/orderCheck/OrderCheckBody';
 import CouponSection from '../components/orderCheck/CouponSection';
 import RemoteAreaSelect from '../components/orderCheck/RemoteAreaSelect';
 
@@ -15,7 +15,7 @@ import PrimaryButton from '../components/buttons/PrimaryButton';
 import backIcon from '../assets/back_icon.svg';
 import { getOrderCheck } from '../apis/orderCheckApi';
 
-const OrderConfirm = () => {
+const OrderCheck = () => {
   const navigate = useNavigate();
 
   const { order, setOrder, isLoading, isError } = useOrderCheck();
@@ -66,7 +66,7 @@ const OrderConfirm = () => {
           errorFallback={<p>주문 확인 정보를 불러오는 데 실패했습니다.</p>}
         >
           {order && (
-            <OrderConfirmBody
+            <OrderCheckBody
               order={order}
               couponSection={
                 <CouponSection
@@ -97,4 +97,4 @@ const OrderConfirm = () => {
   );
 };
 
-export default OrderConfirm;
+export default OrderCheck;

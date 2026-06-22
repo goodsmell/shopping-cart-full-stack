@@ -75,7 +75,7 @@ const ShoppingCart = () => {
         text="주문 확인"
         isDisabled={!cart || !cart.cartItems.some((item) => item.checkStatus)}
         onClick={() => {
-          navigate('/order-confirm');
+          navigate('/order-check');
         }}
       />
     </>

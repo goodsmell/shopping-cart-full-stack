@@ -11,7 +11,7 @@ type Props = {
   remoteAreaSection: ReactNode;
 };
 
-const OrderConfirmBody = ({ order, couponSection, remoteAreaSection }: Props) => {
+const OrderCheckBody = ({ order, couponSection, remoteAreaSection }: Props) => {
   const totalQuantity = order.products.reduce((acc, product) => acc + product.quantity, 0);
 
   return (
@@ -38,4 +38,4 @@ const OrderConfirmBody = ({ order, couponSection, remoteAreaSection }: Props) =>
   );
 };
 
-export default OrderConfirmBody;
+export default OrderCheckBody;
