@@ -91,7 +91,7 @@ const OrderCheck = () => {
       <PrimaryButton
         text="결제 하기"
         isDisabled={!order}
-        onClick={() => navigate('/payment-confirm')}
+        onClick={() => navigate('/payment-check')}
       />
     </>
   );

@@ -12,7 +12,7 @@ import { formatPrice } from '../utils/price';
 import { getOrderCheck } from '../apis/orderCheckApi';
 import type { OrderCheck } from '../types';
 
-const PaymentConfirm = () => {
+const PaymentCheck = () => {
   const navigate = useNavigate();
   const [order, setOrder] = useState<OrderCheck>();
   const [isLoading, setIsLoading] = useState(true);
@@ -131,4 +131,4 @@ const PaymentConfirm = () => {
   );
 };
 
-export default PaymentConfirm;
+export default PaymentCheck;
