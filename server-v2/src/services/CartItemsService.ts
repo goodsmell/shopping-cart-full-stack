@@ -190,7 +190,6 @@ export const selectCartItem = async (userId: string, productId: string, checkSta
     checkStatus: cartItem.checkStatus,
   });
 
-  // TODO 공통으로 빼기? 시간 남으면.. 시간 남으면 고민 ㄱㄱ
   const items = await buildCartItems(userId);
   const isAllSelected = items.length > 0 && items.every((item) => item.checkStatus);
 

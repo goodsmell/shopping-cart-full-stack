@@ -36,7 +36,7 @@ export const computePayInfo = (order: OrderCheckRecord | null): OrderCheckPayInf
   const deliveryFee =
     calculateDeliveryFee(orderPrice) +
     (orderPrice > 0 && remoteAreaCheckStatus ? REMOTE_AREA_EXTRA_FEE : 0);
-  // TODO: 쿠폰 적용 기능 구현 전까지 0으로 고정.
+
   const couponDiscountAmount = 0;
 
   return {
