@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { createOrderCheck, getOrderCheck } from '../apis/orderCheckApi';
+import { getOrderCheck } from '../apis/orderCheckApi';
 import type { OrderCheck } from '../types';
 
 const useOrderCheck = () => {
@@ -10,7 +10,6 @@ const useOrderCheck = () => {
   useEffect(() => {
     const loadOrderCheck = async () => {
       try {
-        await createOrderCheck();
         const data = await getOrderCheck();
         setOrder(data);
       } catch (error) {

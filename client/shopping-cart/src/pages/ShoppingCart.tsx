@@ -8,9 +8,9 @@ import AsyncContent from '../components/common/AsyncContent';
 import AppHeader from '../components/layout/AppHeader';
 
 import useCart from '../hooks/useCart';
-import useCartActions from '../hooks/useCartActions';
+import { createOrderCheck } from '../apis/orderCheckApi';
 import { getCart } from '../apis/cartApi';
-
+import useCartActions from '../hooks/useCartActions';
 const ShoppingCart = () => {
   const navigate = useNavigate();
   const { cart, setCart, isLoading, isError } = useCart(getCart);
@@ -74,7 +74,8 @@ const ShoppingCart = () => {
       <PrimaryButton
         text="주문 확인"
         isDisabled={!cart || !cart.cartItems.some((item) => item.checkStatus)}
-        onClick={() => {
+        onClick={async () => {
+          await createOrderCheck();
           navigate('/order-check');
         }}
       />
