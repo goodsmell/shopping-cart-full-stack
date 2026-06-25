@@ -39,8 +39,7 @@ const meta: Meta<typeof CouponSection> = {
   title: 'OrderCheck/CouponSection',
   component: CouponSection,
   argTypes: {
-    onOpen: { action: 'opened' },
-    onClose: { action: 'closed' },
+    onLoadCoupons: { action: 'loaded' },
     onToggle: { action: 'toggled' },
     onApply: { action: 'applied' },
   },
@@ -49,20 +48,11 @@ const meta: Meta<typeof CouponSection> = {
 export default meta;
 type Story = StoryObj<typeof CouponSection>;
 
-export const Closed: Story = {
+export const Default: Story = {
   args: {
-    isModalOpen: false,
     info,
     selectedIds: info.selectedCoupons,
     discountAmount: 3000,
-  },
-};
-
-export const Open: Story = {
-  args: {
-    isModalOpen: true,
-    info,
-    selectedIds: info.selectedCoupons,
-    discountAmount: 3000,
+    onApply: async () => true,
   },
 };

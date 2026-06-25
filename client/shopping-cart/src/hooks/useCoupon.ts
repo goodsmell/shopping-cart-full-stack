@@ -1,32 +1,25 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { applyCoupons, calculateCouponDiscount, getCoupons } from '../apis/couponApi';
 import type { CouponInfo } from '../types';
 
 const MAX_SELECTED_COUPON_COUNT = 2;
 
 const useCoupon = (onApplied: () => void) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [info, setInfo] = useState<CouponInfo>();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [discountAmount, setDiscountAmount] = useState(0);
 
-  useEffect(() => {
-    if (!isModalOpen) return;
-
-    const loadCoupons = async () => {
-      try {
-        const data = await getCoupons();
-        setInfo(data);
-        setSelectedIds(data.selectedCoupons);
-        setDiscountAmount(await calculateCouponDiscount(data.selectedCoupons));
-      } catch (error) {
-        console.error(error);
-        alert('쿠폰 정보를 불러오는 데 실패했습니다. 다시 시도해 주세요.');
-      }
-    };
-
-    loadCoupons();
-  }, [isModalOpen]);
+  const load = async () => {
+    try {
+      const data = await getCoupons();
+      setInfo(data);
+      setSelectedIds(data.selectedCoupons);
+      setDiscountAmount(await calculateCouponDiscount(data.selectedCoupons));
+    } catch (error) {
+      console.error(error);
+      alert('쿠폰 정보를 불러오는 데 실패했습니다. 다시 시도해 주세요.');
+    }
+  };
 
   const toggle = async (couponId: string) => {
     const isSelected = selectedIds.includes(couponId);
@@ -46,24 +39,23 @@ const useCoupon = (onApplied: () => void) => {
     }
   };
 
-  const apply = async () => {
+  const apply = async (): Promise<boolean> => {
     try {
       await applyCoupons(selectedIds);
-      setIsModalOpen(false);
       onApplied();
+      return true;
     } catch (error) {
       console.error(error);
       alert('쿠폰 적용에 실패했습니다. 다시 시도해 주세요.');
+      return false;
     }
   };
 
   return {
-    isModalOpen,
     info,
     selectedIds,
     discountAmount,
-    open: () => setIsModalOpen(true),
-    close: () => setIsModalOpen(false),
+    load,
     toggle,
     apply,
   };

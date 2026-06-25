@@ -70,12 +70,10 @@ const OrderCheck = () => {
               order={order}
               couponSection={
                 <CouponSection
-                  isModalOpen={coupon.isModalOpen}
                   info={coupon.info}
                   selectedIds={coupon.selectedIds}
                   discountAmount={coupon.discountAmount}
-                  onOpen={coupon.open}
-                  onClose={coupon.close}
+                  onLoadCoupons={coupon.load}
                   onToggle={coupon.toggle}
                   onApply={coupon.apply}
                 />

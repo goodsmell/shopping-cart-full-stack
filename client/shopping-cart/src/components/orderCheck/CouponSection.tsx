@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { useState } from 'react';
 import ModalLayout from '../common/Modal';
 import InfoNotice from '../common/InfoNotice';
 import Checkbox from '../common/buttons/Checkbox';
@@ -8,31 +9,39 @@ import { formatPrice } from '../../utils/price';
 import type { CouponInfo } from '../../types';
 
 type Props = {
-  isModalOpen: boolean;
   info?: CouponInfo;
   selectedIds: string[];
   discountAmount: number;
-  onOpen: () => void;
-  onClose: () => void;
+  onLoadCoupons: () => void;
   onToggle: (couponId: string) => void;
-  onApply: () => void;
+  onApply: () => Promise<boolean>;
 };
 
 const CouponSection = ({
-  isModalOpen,
   info,
   selectedIds,
   discountAmount,
-  onOpen,
-  onClose,
+  onLoadCoupons,
   onToggle,
   onApply,
 }: Props) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpen = () => {
+    setIsModalOpen(true);
+    onLoadCoupons();
+  };
+
+  const handleApply = async () => {
+    const isApplied = await onApply();
+    if (isApplied) setIsModalOpen(false);
+  };
+
   return (
     <>
-      <CouponApplyButton onClick={onOpen} />
+      <CouponApplyButton onClick={handleOpen} />
 
-      <ModalLayout isOpen={isModalOpen} onClose={onClose} title="쿠폰을 선택해 주세요">
+      <ModalLayout isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="쿠폰을 선택해 주세요">
         <InfoNotice text="쿠폰은 최대 2개까지 사용할 수 있습니다." />
 
         <ul
@@ -121,7 +130,7 @@ const CouponSection = ({
 
             cursor: pointer;
           `}
-          onClick={onApply}
+          onClick={handleApply}
         >
           <p
             css={css`
