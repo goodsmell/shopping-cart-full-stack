@@ -10,6 +10,7 @@ const useRemoteArea = (onChanged: () => void) => {
       onChanged();
     } catch (error) {
       console.error(error);
+      alert('도서 산간 지역 선택에 실패했습니다. 다시 시도해 주세요.');
     }
   };
 

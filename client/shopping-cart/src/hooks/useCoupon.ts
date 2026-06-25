@@ -21,6 +21,7 @@ const useCoupon = (onApplied: () => void) => {
         setDiscountAmount(await calculateCouponDiscount(data.selectedCoupons));
       } catch (error) {
         console.error(error);
+        alert('쿠폰 정보를 불러오는 데 실패했습니다. 다시 시도해 주세요.');
       }
     };
 
@@ -41,6 +42,7 @@ const useCoupon = (onApplied: () => void) => {
       setDiscountAmount(await calculateCouponDiscount(nextSelectedIds));
     } catch (error) {
       console.error(error);
+      alert('쿠폰 할인 금액 계산에 실패했습니다. 다시 시도해 주세요.');
     }
   };
 
@@ -51,6 +53,7 @@ const useCoupon = (onApplied: () => void) => {
       onApplied();
     } catch (error) {
       console.error(error);
+      alert('쿠폰 적용에 실패했습니다. 다시 시도해 주세요.');
     }
   };
 

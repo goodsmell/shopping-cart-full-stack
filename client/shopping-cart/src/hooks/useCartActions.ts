@@ -14,6 +14,7 @@ const useCartActions = (setCart: (cart: Cart) => void) => {
       setCart(await getCart());
     } catch (error) {
       console.error(error);
+      alert('상품 선택에 실패했습니다. 다시 시도해 주세요.');
     }
   };
 
@@ -23,6 +24,7 @@ const useCartActions = (setCart: (cart: Cart) => void) => {
       setCart(await getCart());
     } catch (error) {
       console.error(error);
+      alert('전체 선택에 실패했습니다. 다시 시도해 주세요.');
     }
   };
 
@@ -32,6 +34,7 @@ const useCartActions = (setCart: (cart: Cart) => void) => {
       setCart(await getCart());
     } catch (error) {
       console.error(error);
+      alert('상품 삭제에 실패했습니다. 다시 시도해 주세요.');
     }
   };
 
@@ -41,6 +44,7 @@ const useCartActions = (setCart: (cart: Cart) => void) => {
       setCart(await getCart());
     } catch (error) {
       console.error(error);
+      alert('수량 변경에 실패했습니다. 다시 시도해 주세요.');
     }
   };
 
